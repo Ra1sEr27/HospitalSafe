@@ -1,0 +1,10 @@
+{
+    "_id": "_design/application",
+    "_rev": "1-C1687D17",
+    "views": {
+        "viewname": {
+            "map": "function(doc) { ... }",
+            "reduce": "function(keys, values) { ... }"
+        }
+    }
+}
