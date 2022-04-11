@@ -1,0 +1,6 @@
+{
+    "name": "james",
+    "password": "secret",
+    "roles": "medicalstaff",
+    "db": "hospital_section1"
+}
