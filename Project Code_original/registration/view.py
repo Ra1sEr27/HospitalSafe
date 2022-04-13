@@ -11,7 +11,7 @@ import create
 import drop
 import findDoc
 import symcrytjson
-
+import getalldoc
 
 
 def views(key, accessdb):
@@ -24,21 +24,27 @@ def views(key, accessdb):
                 
             #db = couch['rbac']        
                 
-            print("Access granted")
+            #print("Access granted")
             break
         
         except(couchdb.http.Unauthorized):
             print("Invalid username or password")
             
 
+        
     while(True):
-        patientname = input("Enter patient name : ")
-        if(patientname == "back"):
+        type = input("views all or search by patient's name ? (all/search/back/exit) : ")
+        
+        if type == 'exit':
+            exit()
+        elif type == "back":
             break
-        else:
+        
+        elif type == "all":
+            
             if(accessdb == "section1_staff"):
                 viewsdb = "hospital_section1_views"
-            
+                
             elif(accessdb == "section2_staff"):
                 viewsdb = "hospital_section2_views"
             
@@ -53,10 +59,46 @@ def views(key, accessdb):
             else:
                 print("Invalid database")
             
-            foundcheck = findDoc.findDoc(key,patientname,viewsdb)
-            foundcheck = symcrytjson.decryptjson(key,foundcheck)
-            foundcheck_sorted = json.dumps(foundcheck, indent = 6)
-            print("{}'s document: \n{}".format(patientname,foundcheck_sorted))
-            
-        if(patientname == "back"):
-            break
+            getalldoc.getalldoc(key, viewsdb)
+        
+        
+        elif type == "search":
+            patientname = input("Enter patient name : ")
+        
+        
+            if(patientname == "back"):
+                break
+            elif(patientname == "exit"):
+                exit()
+            else:
+                if(accessdb == "section1_staff"):
+                    viewsdb = "hospital_section1_views"
+                
+                elif(accessdb == "section2_staff"):
+                    viewsdb = "hospital_section2_views"
+                
+                elif(accessdb == "section3_staff"):
+                    viewsdb = "hospital_section3_views"
+                
+                elif(accessdb == "section4_staff"):
+                    viewsdb = "hospital_section4_views"
+                
+                elif(accessdb == "section5_staff"):
+                    viewsdb = "hospital_section5_views"
+                else:
+                    print("Invalid database")
+                
+                foundcheck = 'none'
+                
+                foundcheck = findDoc.findDoc(key,patientname,viewsdb)
+                
+                if(foundcheck == 'none'):
+                    print('Patient not found')
+                
+                else:
+                    foundcheck = symcrytjson.decryptjson(key,foundcheck)
+                    foundcheck_sorted = json.dumps(foundcheck, indent = 6)
+                    print("{}'s document: \n{}".format(patientname,foundcheck_sorted))
+                
+        
+    

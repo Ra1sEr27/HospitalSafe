@@ -20,12 +20,12 @@ def findDoc(key,name,db):
     for docid in db.view('_all_docs'): #find the wanted document by comparing MD
         i = docid['id']
         browsedoc = db[i]
-        print(browsedoc)
+        #print(browsedoc)
         origMD_pname = browsedoc['MD_name']
         if origMD_pname == newmd:
             wanteddoc = browsedoc
             break
-    if wanteddoc == "none":
-        print("The wanted document is not found, please try again")
+    # if wanteddoc == "none":
+    #     print("The wanted document is not found, please try again")
 
     return wanteddoc

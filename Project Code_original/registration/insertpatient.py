@@ -137,7 +137,7 @@ def insertpatient(key,patientdb):
                                                             doc_encrypted_views = symcrytjson.encryptjson(key,doc_string_views) 
                                                             doc_encrypted_sorted_views = json.dumps(doc_encrypted_views, indent = 3)
                                                             
-                                                            print("Encrypted document: \n", doc_encrypted_sorted_views)
+                                                            print("Encrypted view document: \n", doc_encrypted_sorted_views)
                                                             print("Encrypted document: \n", doc_encrypted_sorted)
                                                             
                                                             while(True):

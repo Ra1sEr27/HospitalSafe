@@ -41,6 +41,3 @@ def deletestaff(key,staffdb):
                 exit()
             else:
                 print("Invalid input, please try again")
-# with open('key.key', 'rb') as file:
-#     key = file.read()
-# deletestaff(key,"section1_staff")

@@ -25,10 +25,10 @@ def updatepatient(key,patientdb):
             elif pname == "back":
                 registrar.registrar(key,patientdb)
             wanteddoc = findDoc.findDoc(key,pname,patientdb)
-
             if wanteddoc != "none": #if function findDoc found the document then break the while loop
                 break
-        
+            else:
+                print("The wanted document is not found, please try again")
         decdoc = symcrytjson.decryptjson(key,wanteddoc)
         decdoc_sorted = json.dumps(decdoc, indent = 6)
         print("{}'s document: \n{}".format(pname,decdoc_sorted))
@@ -36,7 +36,7 @@ def updatepatient(key,patientdb):
         while(True):
             edit_attr = input("Which {}'s attributes do you want to edit? (back->Enter staff name, exit->exit the program):".format(pname))
             if edit_attr in decdoc:
-                print("have attr")
+                #print("have attr")
                 while(True):
                     new_val = input("Enter the new value of attribute {} (back->select attribute, exit->exit the program): ".format(edit_attr))
                     if new_val == "exit":

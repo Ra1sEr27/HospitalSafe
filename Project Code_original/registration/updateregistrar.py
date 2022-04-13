@@ -12,13 +12,13 @@ import updateadmin
 def updateregistrar(key):
     while(True):
         while(True):
-            registrarname = input("Enter staff name : ")
+            registrarname = input("Enter registrar name : ")
             if registrarname == "back":
                 break
             elif registrarname == "exit":
                 exit()
             wanteddoc = findDoc.findDoc(key,registrarname,"section1_staff")
-            section_no=0
+            section_no=1
             while wanteddoc == "none": #find registrar's document in every staff database
                 section_no += 1
                 if section_no==6:
@@ -26,10 +26,9 @@ def updateregistrar(key):
                     break
                 wanteddoc = findDoc.findDoc(key,registrarname,"section{}_staff".format(section_no))
             if wanteddoc != "none":
-                decdoc = symcrytjson.decryptjson(wanteddoc)
+                decdoc = symcrytjson.decryptjson(key,wanteddoc)
                 decdoc_lite = {"name": "{}".format(decdoc["name"]), "password": "", "role": "{}".format(decdoc["role"]), "accessdb": "{}".format(decdoc["accessdb"])}
                 decdoc_sorted = json.dumps(decdoc_lite,indent = 6)
-                
                 print("{}'s document : \n{}".format(registrarname,decdoc_sorted))
                 
                 while(True):
@@ -107,3 +106,6 @@ def updateregistrar(key):
     
     
     
+# with open('section1_staff.key', 'rb') as file:
+#     key = file.read()
+# updateregistrar(key)

@@ -28,8 +28,7 @@ def encryptjson(key,data_string):
     hmac1 = hmac.new(key, name_byte, digestmod=hashlib.sha256)
     #Create MD from hmac1
     md1 = hmac1.hexdigest()
-    #print(md1)
-    #print(type(md1))
+
     mac = mac.decode('ISO-8859-1')
 
     # convert bytes to string
@@ -39,8 +38,7 @@ def encryptjson(key,data_string):
     # Upload ciphertext, MD and MAC to CouchDB
     doc = {'MD_name': '{}'.format(md1), 'CT': '{}'.format(
         encrypted), 'MAC': '{}'.format(mac)}
-    #print("doc: ",s)
-    #print("Encrypted document: ", doc)
+
     return doc
 
 def decryptjson(key,doc):
@@ -63,8 +61,6 @@ def decryptjson(key,doc):
     #convert string to json format
     decdoc = json.loads(decdoc)
     #reindent the json file
-    if mac == origmac:
-        print("Integrity checked")
-    else:
+    if mac != origmac:
         print("The data has been modified")
     return decdoc

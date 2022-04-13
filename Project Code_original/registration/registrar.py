@@ -9,10 +9,10 @@ import binascii
 import insertpatient
 import updatepatient
 import deletepatient
-import insertstaff
+import insertadmin_registrar_staff
 import deletestaff
 import updatestaff
-
+import getalldoc
 
 def registrar(key,accessdb):
     if accessdb in ("db1","hospital_section1","section1_staff"):
@@ -34,11 +34,18 @@ def registrar(key,accessdb):
         print("Database {} is not existed".format(accessdb))
         return False
     while(True):
-        type = input("Which types of document do you want to insert/modify? (medical staff,patient,back): ")
+        type = input("Which types of document do you want to view/insert/modify? (medical staff,patient,back): ")
         if type == "patient":
             while(True):
-                command1 = input("Which tasks do you want to do? (insert,modify,back): ")
-                if command1 == "insert":
+                command1 = input("Which tasks do you want to do? (view,insert,modify,back): ")
+                
+                if command1 == "view":
+                    if command1 == "view":
+                        getalldoc.getalldoc(key, patientdb)
+                    
+                    #getalldoc.getalldoc_views(key, patientdb)
+
+                elif command1 == "insert":
                     insertpatient.insertpatient(key,patientdb)
                 elif command1 == "modify":
                     command = input("What do you want to do with the document? (update,delete,back): ")
@@ -56,10 +63,13 @@ def registrar(key,accessdb):
                     print("Invalid command")
         elif type == "medical staff":
             while(True):
-                command1 = input("Which tasks do you want to do? (insert,modify,back): ")
-                if command1 == "insert":
+                command1 = input("Which tasks do you want to do? (view/insert,modify,back): ")
+                
+                if command1 == "view":
+                    getalldoc.getalldoc(key, accessdb)
+                elif command1 == "insert":
                     #print("staffdb: ",staffdb)
-                    insertstaff.insertstaff(key,staffdb)
+                    insertadmin_registrar_staff.insertadmin_registrar_staff(key,staffdb,"medical staff")
                 elif command1 == "modify":
                     command = input("What do you want to do with this document? (update,delete,back): ")
                     if command =="update":

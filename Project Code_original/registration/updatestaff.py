@@ -77,7 +77,7 @@ def updatestaff(key,staffdb):
                         #print the results
                         
                         edited_doc_lite = {"name": "{}".format(decdoc["name"]), "password": "", "role": "{}".format(decdoc["role"]), "accessdb": "{}".format(decdoc["accessdb"])}
-                        print("Edited {}'s document: \n{}".format(staffname,edited_decdoc_sorted))
+                        print("Edited {}'s document: \n{}".format(staffname,edited_doc_lite))
                         print("Encrypted edited {}'s document: \n{}".format(staffname,encrypted_edited_decdoc_sorted))
 
                         #update to the database

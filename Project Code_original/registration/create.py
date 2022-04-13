@@ -23,10 +23,12 @@ def create():
     couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
 
     while(True): #keep the program running
-        dbname = input("Enter database name (type exit to exit the program): ")
+        dbname = input("Enter database name : ")
         #type "exit" to terminate the program
         if dbname == "exit":
             exit()
+        elif dbname == "back":
+            break
         try:
             couch.create(dbname)
             print("Database {} has been created".format(dbname))

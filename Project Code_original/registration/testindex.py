@@ -9,7 +9,7 @@ import binascii
 import insertpatient
 import updatepatient
 import deletepatient
-import insertstaff
+import insertadmin_registrar_staff
 import deletestaff
 import updatestaff
 import registrar
