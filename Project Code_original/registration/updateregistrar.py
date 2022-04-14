@@ -103,9 +103,3 @@ def updateregistrar(key):
                         exit()
                     else:
                         print("Invalid attribute, please try again")
-    
-    
-    
-# with open('section1_staff.key', 'rb') as file:
-#     key = file.read()
-# updateregistrar(key)

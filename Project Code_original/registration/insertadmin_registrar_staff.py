@@ -12,7 +12,8 @@ import ast
 import symcrytjson
 import getpass
 import registrar
-def insertadmin_registrar_staff(key,accessdb,role):
+import admin
+def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
     while(True):
         try:
             # connect to the DB
@@ -26,8 +27,10 @@ def insertadmin_registrar_staff(key,accessdb,role):
         if username == "exit":
             exit()
         elif username == "back":
-            if role == "registrar":
+            if inserterrole == "registrar":
                 registrar.registrar(key,accessdb)
+            elif inserterrole == "admin":
+                admin.admin(key,"nontawat")
             else:
                 break
         while(True):

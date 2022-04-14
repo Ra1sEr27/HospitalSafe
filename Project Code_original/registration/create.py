@@ -8,18 +8,8 @@ import hmac
 import binascii
 
 
-# def update(username,password):
-#     couch = couchdb.Server('http://{}:{}@localhost:5984/'.format(username,password))
-#     while(True): #keep the program running
-#         dbname = input("Enter database name: ")
-#         #type "exit" to terminate the program
-#         if dbname == "exit":
-#             exit()
-#         couch.create(dbname)
-#         print("Database {} has been created".format(dbname))
-
 def create():
-#code for testing
+    #code for testing
     couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
 
     while(True): #keep the program running

@@ -7,7 +7,7 @@ import json
 import hashlib
 import hmac
 import binascii
-
+import keyrevocation
 def encryptjson(key,data_string):
 
     #convert string to JSON
@@ -63,4 +63,7 @@ def decryptjson(key,doc):
     #reindent the json file
     if mac != origmac:
         print("The data has been modified")
+        #keyname = key.name
+        #keyrevocation.keyrevocation(keyname)
     return decdoc
+    

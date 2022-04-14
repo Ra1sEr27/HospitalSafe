@@ -4,10 +4,7 @@ import onetimepad
 import getpass
 import couchdb
 import json
-import hashlib
-import hmac
-import binascii
-import ast
+
 import symcrytjson
 import registrar
 def insertpatient(key,patientdb):
@@ -161,27 +158,3 @@ def insertpatient(key,patientdb):
                                                                     exit()
                                                                 else:
                                                                     print("Invalid command, please try again")
-            
-
-    # name = "Jill Lundberg"
-    # NationalID = "11355-19735-49-0"
-    # dob = "April 10, 1956"
-    # Phonenum ="847-696-0874"
-    # RelativePhonenum = "093-293-2920"
-    # nationality = "American"
-    # admissionDate = "January 31, 2022"
-    # email = "JillLun@gmailcom"
-    # status = "Critical"
-    # height = 159
-    # weight = 66
-    # bloodtype = "A+"
-
-            # create a json format from input
-            
-        
-        
-
-# with open('key.key', 'rb') as file:
-#     key = file.read()
-# insertpatient(key,"hospital_section1")
-

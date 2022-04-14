@@ -69,7 +69,7 @@ def registrar(key,accessdb):
                     getalldoc.getalldoc(key, accessdb)
                 elif command1 == "insert":
                     #print("staffdb: ",staffdb)
-                    insertadmin_registrar_staff.insertadmin_registrar_staff(key,staffdb,"medical staff")
+                    insertadmin_registrar_staff.insertadmin_registrar_staff(key,staffdb,"registrar","medical staff")
                 elif command1 == "modify":
                     command = input("What do you want to do with this document? (update,delete,back): ")
                     if command =="update":

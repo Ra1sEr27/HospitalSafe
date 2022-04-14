@@ -10,8 +10,6 @@ import findDoc
 import symcrytjson
 
 def deletepatient(key,patientdb):
-    
-
         while(True):
             pname = input("Enter patient name: ")
             if pname == "exit":
@@ -51,6 +49,3 @@ def deletepatient(key,patientdb):
                     else:
                         print("Invalid input, please try again")
 
-# with open('key.key', 'rb') as file:
-#     key = file.read()
-# deletepatient(key,"hospital_section1")

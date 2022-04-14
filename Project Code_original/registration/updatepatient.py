@@ -88,7 +88,3 @@ def updatepatient(key,patientdb):
                 exit()
             else:
                 print("Invalid attribute, please try again")
-            
-
-#test the function
-#updatestaff("hospital_section1")

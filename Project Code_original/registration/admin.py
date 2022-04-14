@@ -13,7 +13,7 @@ import create, drop
 
 def admin(key,adminname):
     while(True):
-        sqlcommand = input("Which type SQL commands do you want to use? (DDL,DML) : ")
+        sqlcommand = input("Which type SQL commands do you want to use? (DDL,DML,back) : ")
         sqlcommand = sqlcommand.lower()
         if sqlcommand == "ddl":
             while(True):
@@ -37,6 +37,8 @@ def admin(key,adminname):
                         command1 = input("Which tasks do you want to do? (insert,modify,back): ")
                         if command1 == "insert":
                             insertadmin_registrar_staff.insertadmin_registrar_staff(key,"admin","admin")
+                        #elif command1 == "view":
+
                         elif command1 == "modify":
                             command = input("What do you want to do with the document? (update,delete,back): ")
                             if command =="update":
@@ -56,14 +58,16 @@ def admin(key,adminname):
                         command1 = input("Which tasks do you want to do? (insert,modify,back): ")
                         if command1 in ("insert", "modify"):
                             while(True):
-                                section_no = input("Enter section number (1-5): ")
-                                if section_no in ("1","2","3","4","5"):
+                                section_no = input("Enter section number (1-3): ")
+                                if section_no in ("1","2","3"):
                                     staffdb = "section{}_staff".format(section_no)
+                                    with open('section{}_staff.key'.format(section_no),'rb') as file: #open key for that section
+                                        key = file.read()
                                     break
                                 else:
                                     print("Invalid section, please try again")
                             if command1 == "insert":
-                                insertadmin_registrar_staff.insertadmin_registrar_staff(key,staffdb,"registrar")
+                                insertadmin_registrar_staff.insertadmin_registrar_staff(key,staffdb,"admin","registrar")
                             elif command1 == "modify":
                                 command = input("What do you want to do with this document? (update,delete,back): ")
                                 if command =="update":
@@ -82,8 +86,7 @@ def admin(key,adminname):
                     break
                 else:
                     print("Invalid type, please try again")
+        elif sqlcommand == "back":
+            break
         else:
             print("Invalid SQL Command, please try again")
-# with open('admin.key', 'rb') as file:
-#     key = file.read()
-# admin(key)

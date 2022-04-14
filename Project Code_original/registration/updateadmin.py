@@ -11,7 +11,7 @@ import findDoc
 import symcrytjson
 import registrar
 import getpass
-import admin
+
 
 def updateadmin(key,adminname):
     couch = couchdb.Server('http://{}:{}@localhost:5984/'.format("nontawat","non123"))
@@ -98,9 +98,3 @@ def updateadmin(key,adminname):
                 exit()
             else:
                 print("Invalid attribute, please try again")
-            
-
-#test the function
-# with open('admin.key', 'rb') as file:
-#     key = file.read()
-# updateadmin(key)
