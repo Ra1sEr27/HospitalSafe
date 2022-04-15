@@ -50,8 +50,8 @@ def decryptjson(key,doc):
     CTbytes = str.encode(CT)
     #decrypt the ciphertext
     fernet = Fernet(key)
+    
     decdoc = fernet.decrypt(CTbytes)
-
     #generate MAC for checking integrity
     mac = hmac.new(key, decdoc, hashlib.sha256).digest()
     mac = mac.decode('ISO-8859-1')

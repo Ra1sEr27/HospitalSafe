@@ -22,7 +22,7 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
             db= couch[accessdb]
         except(couchdb.http.Unauthorized,couchdb.http.ResourceNotFound):
             print("Database is not existed")
-        print("---Type exit or back to go back to registrar---")
+        #print("---Type exit or back to go back to registrar---")
         username = input("Enter name: ")
         if username == "exit":
             exit()

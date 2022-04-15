@@ -11,12 +11,12 @@ import symcrytjson
 def getalldoc(key,db):
 
     couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
-    db = couch[db]
+    db1 = couch[db]
     #Get id from database
     wanteddoc = "none"
-    for docid in db.view('_all_docs'): #find the wanted document by comparing MD
+    for docid in db1.view('_all_docs'): #find the wanted document by comparing MD
         i = docid['id']
-        browsedoc = db[i]
+        browsedoc = db1[i]
         if "MD_name" in browsedoc:
             decdoc = symcrytjson.decryptjson(key,browsedoc)
             decdoc_sorted = json.dumps(decdoc,indent = 6)

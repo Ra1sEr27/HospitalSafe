@@ -26,7 +26,7 @@ def updateadmin(key,adminname):
         print("{}'s document : \n{}".format(adminname,decdoc_sorted))
         
         while(True):
-            edit_attr = input("Which {}'s attributes do you want to edit? (back->Enter staff name, exit->exit the program):".format(adminname))
+            edit_attr = input("Which {}'s attributes do you want to edit? (Enter attribute, back, exit):".format(adminname))
             if edit_attr in decdoc:
                 while(True):
                     if edit_attr == "password":

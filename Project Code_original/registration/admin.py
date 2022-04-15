@@ -10,6 +10,7 @@ import insertadmin_registrar_staff
 import updateadmin, deleteadmin
 import updateregistrar, deleteregistrar
 import create, drop
+import getalldoc
 
 def admin(key,adminname):
     while(True):
@@ -34,11 +35,12 @@ def admin(key,adminname):
                 type = input("Which roles of user's document do you want to insert/modify? (admin,registrar,back): ")
                 if type == "admin":
                     while(True):
-                        command1 = input("Which tasks do you want to do? (insert,modify,back): ")
+                        command1 = input("Which tasks do you want to do? (view,insert,modify,back): ")
                         if command1 == "insert":
-                            insertadmin_registrar_staff.insertadmin_registrar_staff(key,"admin","admin")
+                            insertadmin_registrar_staff.insertadmin_registrar_staff(key,"admin","admin","admin")
                         #elif command1 == "view":
-
+                        elif command1 == "view":
+                            getalldoc.getalldoc(key,"admin")
                         elif command1 == "modify":
                             command = input("What do you want to do with the document? (update,delete,back): ")
                             if command =="update":
@@ -55,8 +57,8 @@ def admin(key,adminname):
                             print("Invalid command")
                 elif type == "registrar":
                     while(True):
-                        command1 = input("Which tasks do you want to do? (insert,modify,back): ")
-                        if command1 in ("insert", "modify"):
+                        command1 = input("Which tasks do you want to do? (view,insert,modify,back): ")
+                        if command1 in ("view","insert", "modify"):
                             while(True):
                                 section_no = input("Enter section number (1-3): ")
                                 if section_no in ("1","2","3"):
@@ -68,12 +70,14 @@ def admin(key,adminname):
                                     print("Invalid section, please try again")
                             if command1 == "insert":
                                 insertadmin_registrar_staff.insertadmin_registrar_staff(key,staffdb,"admin","registrar")
+                            elif command1 == "view":
+                                getalldoc.getalldoc(key,"section{}_staff".format(section_no))
                             elif command1 == "modify":
                                 command = input("What do you want to do with this document? (update,delete,back): ")
                                 if command =="update":
                                     updateregistrar.updateregistrar(key)
                                 elif command =="delete":
-                                    deleteregistrar.deleteregistrar(key,staffdb)
+                                    deleteregistrar.deleteregistrar(key)
                                 elif command =="back": # exit the if-statement
                                     break
                                 else:
