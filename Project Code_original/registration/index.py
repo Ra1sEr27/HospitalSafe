@@ -60,8 +60,8 @@ def index():
                 username_check = decryptcheck["name"]
                 password_check = decryptcheck["password"]
                 
-                print(username_check+" "+password_check)
-                print(username+" "+password)
+                #print(username_check+" "+password_check)
+                #print(username+" "+password)
             
             
             if(sa != "none" and username == username_check and password == password_check): # authenticated

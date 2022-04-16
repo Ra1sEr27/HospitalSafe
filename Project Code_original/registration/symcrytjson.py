@@ -1,5 +1,6 @@
 
 from cryptography.fernet import Fernet
+import cryptography
 import onetimepad
 import getpass
 import couchdb
@@ -50,20 +51,33 @@ def decryptjson(key,doc):
     CTbytes = str.encode(CT)
     #decrypt the ciphertext
     fernet = Fernet(key)
-    
-    decdoc = fernet.decrypt(CTbytes)
+    with open('admin.key','rb') as file:
+        check_key = file.read()
+    i = 0
+    while(key != check_key):
+        i+=1
+        with open('section{}_staff.key'.format(i),'rb') as file:
+            check_key = file.read()
+        
+    try:
+        decdoc = fernet.decrypt(CTbytes)
+    except(cryptography.fernet.InvalidToken):
+        print("The data has been modified")
+        keyrevocation.keyrevocation(str(i))
+        return False
+
     #generate MAC for checking integrity
     mac = hmac.new(key, decdoc, hashlib.sha256).digest()
     mac = mac.decode('ISO-8859-1')
-
+    
     #convert the decrypted byte to string
     decdoc = decdoc.decode("utf-8")
+    
     #convert string to json format
     decdoc = json.loads(decdoc)
+
     #reindent the json file
     if mac != origmac:
         print("The data has been modified")
-        #keyname = key.name
-        #keyrevocation.keyrevocation(keyname)
     return decdoc
     

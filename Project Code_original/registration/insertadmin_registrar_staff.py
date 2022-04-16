@@ -27,12 +27,13 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
         if username == "exit":
             exit()
         elif username == "back":
-            if inserterrole == "registrar":
-                registrar.registrar(key,accessdb)
-            elif inserterrole == "admin":
-                admin.admin(key,"nontawat")
-            else:
-                break
+            # if inserterrole == "registrar":
+            #     registrar.registrar(key,accessdb)
+            # elif inserterrole == "admin":
+            #     admin.admin(key,"nontawat")
+            # else:
+            #     break
+            break
         while(True):
             password = getpass.getpass("Enter password: ")
             if password == "exit":
