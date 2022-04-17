@@ -19,12 +19,12 @@ def keyrevocation(target_section):
             break
     for docid in staffdb.view('_all_docs'): #delete all documents in compromised staff section
         i = docid['id']
-        browsedoc = db[i]
+        browsedoc = staffdb[i]
         staffdb.delete(browsedoc)
 
     for docid in patientdb.view('_all_docs'): #delete all documents in compromised patient section
         i = docid['id']
-        browsedoc = db[i]
+        browsedoc = patientdb[i]
         patientdb.delete(browsedoc)
 
     with open('section{}_staff.key'.format(target_section),'rb') as file:

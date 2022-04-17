@@ -4,7 +4,7 @@ import onetimepad
 import getpass
 import couchdb
 import json
-
+import os
 import symcrytjson
 import registrar
 def insertpatient(key,patientdb):
@@ -21,7 +21,7 @@ def insertpatient(key,patientdb):
     while(True):
         while(True):
             while(True):
-                name = input("Enter username : ")
+                name = input("Enter name : ")
                 if name == "exit":
                     exit()
                 elif name == "back":
@@ -137,6 +137,18 @@ def insertpatient(key,patientdb):
                                                             print("Encrypted view document: \n", doc_encrypted_sorted_views)
                                                             print("Encrypted document: \n", doc_encrypted_sorted)
                                                             
+                                                            if patientdb == "hospital_section1":
+                                                                section_no = 1
+                                                            elif patientdb == "hospital_section2":
+                                                                section_no = 2
+                                                            elif patientdb == "hospital_section3":
+                                                                section_no = 3
+                                                            else:
+                                                                print("Invalid section")
+
+                                                            dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\Patient documents'
+                                                            patient_no =len([entry for entry in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, entry))]) + 1
+                                                            print("patient_no: ",patient_no)
                                                             while(True):
                                                                 confirm = input("Do you want to insert the above encrypted document? (y/n/exit): ")
                                                                 if confirm == "y":
@@ -146,6 +158,10 @@ def insertpatient(key,patientdb):
                                                                         
                                                                         # views database
                                                                         db_views.save(doc_encrypted_views)
+
+                                                                        #save to local storage
+                                                                        with open('./Patient documents/{}_section{}_no{}.json'.format(name,section_no,patient_no),'w') as file:
+                                                                            file.write(doc_sorted)
                                                                         
                                                                         print("The document has been saved to {}".format(db.name))
                                                                         print("The document has been saved to {}".format(db_views.name))

@@ -61,7 +61,7 @@ def decryptjson(key,doc):
         
     try:
         decdoc = fernet.decrypt(CTbytes)
-    except(cryptography.fernet.InvalidToken):
+    except(cryptography.fernet.InvalidToken or cryptography.exceptions.InvalidSignature):
         print("The data has been modified")
         keyrevocation.keyrevocation(str(i))
         return False
@@ -76,8 +76,5 @@ def decryptjson(key,doc):
     #convert string to json format
     decdoc = json.loads(decdoc)
 
-    #reindent the json file
-    if mac != origmac:
-        print("The data has been modified")
     return decdoc
     
