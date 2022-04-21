@@ -13,8 +13,8 @@ import timeit
 def index():
     while(True):
         while(True):
-            username = input("please insert name : ")
-            if username == "exit":
+            id = input("please insert id : ")
+            if id == "exit":
                 exit()
             password = getpass.getpass("please insert password : ")
             if password == "exit":
@@ -27,10 +27,10 @@ def index():
             with open('admin.key', 'rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key
                 admin_key = file.read()
             
-            wanteddoc = findDoc.findDoc(admin_key,username,"admin") #find document in admin database
+            wanteddoc = findDoc.findDoc(admin_key,id,"admin") #find document in admin database
             if wanteddoc != "none":
                 decryptcheck = symcrytjson.decryptjson(admin_key, wanteddoc)
-                username_check = decryptcheck["name"]
+                id_check = decryptcheck["id"]
                 password_check = decryptcheck["password"]
                 sa = 'a' # admin
             
@@ -40,7 +40,7 @@ def index():
             while wanteddoc == "none": #find registrar's document in every staff database when the user is not an admin
                 section_no += 1
                 if section_no==4:
-                    print("There is no {}'s document stored in the system".format(username))
+                    print("There is no {}'s document stored in the system".format(id))
                     sa = "none" # not found any staff / admin
                     
                     # worst case runtime 
@@ -51,33 +51,33 @@ def index():
                 with open('section{}_staff.key'.format(section_no),'rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key
                     key_selected = file.read()
                     
-                wanteddoc = findDoc.findDoc(key_selected,username,"section{}_staff".format(section_no))
+                wanteddoc = findDoc.findDoc(key_selected,id,"section{}_staff".format(section_no))
                 sa = 's' # staff
                 
             if(sa == 's'):
                 
                 decryptcheck = symcrytjson.decryptjson(key_selected, wanteddoc)
-                username_check = decryptcheck["name"]
+                id_check = decryptcheck["id"]
                 password_check = decryptcheck["password"]
                 
-                #print(username_check+" "+password_check)
-                #print(username+" "+password)
+                #print(id_check+" "+password_check)
+                #print(id+" "+password)
             
             
-            if(sa != "none" and username == username_check and password == password_check): # authenticated
+            if(sa != "none" and id == id_check and password == password_check): # authenticated
                 
                 if(sa == 's'):
                     decdoc = symcrytjson.decryptjson(key_selected,wanteddoc)
                     known_sec = decdoc['accessdb'] # accessdb            
                 
-                #print(decryptcheck) # username, password, role
+                #print(decryptcheck) # id, password, role
                 role = decryptcheck['role']
                 
                 if(role == "admin"):
                     #with open('admin.key','rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key
                     #    admin_key = file.read()
                     print("---Welcome to admin section---")
-                    admin.admin(admin_key,username)
+                    admin.admin(admin_key,id)
                     
                 if(role == "registrar"):            
                     print("---Welcome to registrar section---")

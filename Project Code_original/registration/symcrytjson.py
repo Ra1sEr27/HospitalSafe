@@ -14,19 +14,19 @@ def encryptjson(key,data_string):
     #convert string to JSON
     data_json = json.loads(data_string)
     #store name in name variable
-    name = data_json["name"]
+    id = data_json["id"]
     #convert string to byte for encryption
     data_byte = str.encode(data_string)
     
     # convert pname to byte format
-    name_byte = str.encode(name)
+    id_byte = str.encode(id)
     # this encrypts the data read from your json and stores it in 'encrypted'
     fernet = Fernet(key)
     encrypted = fernet.encrypt(data_byte)
     
     # create MAC from key and data
     mac = hmac.new(key, data_byte, hashlib.sha256).digest()
-    hmac1 = hmac.new(key, name_byte, digestmod=hashlib.sha256)
+    hmac1 = hmac.new(key, id_byte, digestmod=hashlib.sha256)
     #Create MD from hmac1
     md1 = hmac1.hexdigest()
 
@@ -37,7 +37,7 @@ def encryptjson(key,data_string):
     #encpname = encpname.decode("utf-8")
 
     # Upload ciphertext, MD and MAC to CouchDB
-    doc = {'MD_name': '{}'.format(md1), 'CT': '{}'.format(
+    doc = {'MD_id': '{}'.format(md1), 'CT': '{}'.format(
         encrypted), 'MAC': '{}'.format(mac)}
 
     return doc
