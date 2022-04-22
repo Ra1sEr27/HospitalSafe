@@ -44,40 +44,65 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
             else:
                 print("Passwords are not matched, please try again")
         #id generator
+        #print(accessdb)
+        #generate last 4 digit of id
+        
         if accessdb != "admin": #generate staff id
-            section_no = int(accessdb[7])
-            if section_no == 1:
+            
+            section_no = accessdb[7]
+            if section_no == "1":
                 dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section1_staff'
-            elif section_no == 2:
+            elif section_no == "2":
                 dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section2_staff'
-            elif section_no == 3:
+            elif section_no == "3":
                 dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section3_staff'
             else:
                 print("Invalid section")
             
-            staff_no =len([entry for entry in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, entry))]) + 1
+            #staff_no =len([entry for entry in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, entry))]) + 1
             staff_id_first2digits = str(section_no)
             while(len(staff_id_first2digits) != 2):
                 staff_id_first2digits = "0" + staff_id_first2digits
             
-            staff_id_last4digits = str(staff_no)
-            while(len(staff_id_last4digits) != 4):
-                staff_id_last4digits = "0" + staff_id_last4digits
-
-            staff_id = role[0] +staff_id_first2digits + staff_id_last4digits
+            staff_id_last4digits = 0
+            staff_id = role[0] +staff_id_first2digits + "000" + str(staff_id_last4digits)
+            dir_list = os.listdir(dir_path)
+            dir_list_onlyID = []
+            for i in range(len(dir_list)): #append all of the file names from the chosen folder
+                dir_list_onlyID.append(dir_list[i][:7])
+            print(dir_list_onlyID)
+            while(staff_id in dir_list_onlyID): #increase the number of last 4 digits
+                staff_id_last4digits = int(staff_id_last4digits)
+                staff_id_last4digits += 1
+                staff_id_last4digits = str(staff_id_last4digits)
+                
+                while(len(staff_id_last4digits) != 4): #pad 0 to the left of last 4 digits
+                    staff_id_last4digits = "0" + staff_id_last4digits
+                    print("in loop ",staff_id_last4digits)
+                staff_id = role[0] +staff_id_first2digits + str(staff_id_last4digits)
         else: #generate admin id
             dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\admin'
-            staff_no =len([entry for entry in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, entry))]) + 1
-            staff_id_last4digits = str(staff_no)
-            while(len(staff_id_last4digits) != 4):
-                staff_id_last4digits = "0" + staff_id_last4digits
-            staff_id = "a" + "00" + staff_id_last4digits
+            #staff_no =len([entry for entry in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, entry))]) + 1
+            staff_id_last4digits = 0
+            staff_id = "a000000"
+            dir_list = os.listdir(dir_path)
+            dir_list_onlyID = []
+            for i in range(len(dir_list)):
+                dir_list_onlyID.append(dir_list[i][:7])
+            print(dir_list_onlyID)
+            while(staff_id in dir_list_onlyID):
+                staff_id_last4digits = int(staff_id_last4digits)
+                staff_id_last4digits += 1
+                staff_id_last4digits = str(staff_id_last4digits)
+                while(len(staff_id_last4digits) != 4):
+                    staff_id_last4digits = "0" + staff_id_last4digits
+                staff_id = "a" + "00" + staff_id_last4digits
         print(staff_id)
         # create a json format from input
         
         doc = {"id": "{}".format(staff_id),"name": "{}".format(username), "password": "{}".format(password), "role": "{}".format(role), "accessdb": "{}".format(accessdb)}
         doc_sorted = json.dumps(doc, indent=3)
-        doc_lite = {"staffid": "{}".format(staff_id),"name": "{}".format(username), "password": "", "role": "{}".format(role), "accessdb": "{}".format(accessdb)}
+        doc_lite = {"id": "{}".format(staff_id),"name": "{}".format(username), "password": "", "role": "{}".format(role), "accessdb": "{}".format(accessdb)}
         doc_lite_sorted = json.dumps(doc_lite, indent=3)
         print("Document: \n{}".format(doc_lite_sorted))
         # Convert JSON to string
@@ -89,14 +114,14 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
         confirm = input("Do you want to insert the above encrypted document? (y/n/back/exit): ")
         if confirm == "y":
             try:
-                if role[0] == "a": #save to admin folder
+                if staff_id[0] == "a": #save to admin folder
                     with open('./admin/{}_{}.json'.format(staff_id,username),'w') as file:
                         file.write(doc_sorted)
-                elif role[0] in ("r","m"): #save to staff folder
-                    with open('./admin/{}_{}.json'.format(section_no,staff_id,username),'w') as file:
+                elif staff_id[0] in ("r","m"): #save to staff folder
+                    with open('./section{}_staff/{}_{}.json'.format(section_no,staff_id,username),'w') as file:
                         file.write(doc_sorted)
                 db.save(doc_encrypted)
-                print("The document has been saved to {}".format(db.name))
+                print("The document has been saved to {}.".format(db.name))
             except(couchdb.http.ServerError):
                 print("Cannot save the document")
         elif confirm == "n":

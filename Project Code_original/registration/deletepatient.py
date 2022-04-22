@@ -8,17 +8,18 @@ import hmac
 import binascii
 import findDoc
 import symcrytjson
+import os
 
 def deletepatient(key,patientdb):
         while(True):
-            pname = input("Enter patient name: ")
-            if pname == "exit":
+            pid = input("Enter patient id: ")
+            if pid == "exit":
                 exit()
-            elif pname == "back":
+            elif pid == "back":
                 break
             #find the document
-            wanteddoc = findDoc.findDoc(key,pname,patientdb)
-            wanteddoc_views = findDoc.findDoc(key,pname,patientdb+'_views')
+            wanteddoc = findDoc.findDoc(key,pid,patientdb)
+            wanteddoc_views = findDoc.findDoc(key,pid,patientdb+'_views')
             if wanteddoc != "none":
                 #decrypt the document
                 decdoc = symcrytjson.decryptjson(key,wanteddoc)
@@ -40,7 +41,11 @@ def deletepatient(key,patientdb):
                         db2 = couch[viewdb]
                         db2.delete(wanteddoc_views)
                         
-                        print("{}'s document has been deleted".format(pname))
+                        #delete local document
+                        f = open('./section{}_patient/{}_{}.json'.format(patientdb[16],pid,decdoc["name"]), 'w') #delete local file
+                        f.close()
+                        os.remove(f.name)
+                        print("{}'s document has been deleted".format(pid))
                         break
                     elif ans =='n':
                         break

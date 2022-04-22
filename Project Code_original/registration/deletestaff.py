@@ -8,16 +8,16 @@ import hmac
 import binascii
 import findDoc
 import symcrytjson
-
+import os
 def deletestaff(key,staffdb):
     
     while(True):
         while(True):
-            staffname = input("Enter staff name (type exit to exit the program): ")
-            if staffname == "exit":
+            staffid = input("Enter staff id (type exit to exit the program): ")
+            if staffid == "exit":
                 exit()
             #find the document
-            wanteddoc = findDoc.findDoc(key,staffname,staffdb)
+            wanteddoc = findDoc.findDoc(key,staffid,staffdb)
             if wanteddoc != "none":
                 break
 
@@ -33,7 +33,10 @@ def deletestaff(key,staffdb):
                 couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
                 db1 = couch[staffdb]
                 db1.delete(wanteddoc)
-                print("{}'s document has been deleted".format(staffname))
+                f = open('./section{}_patient/{}_{}.json'.format(staffdb[7],staffid,decdoc["name"]), 'w') #delete local file
+                f.close()
+                os.remove(f.name)
+                print("{}'s document has been deleted".format(staffid))
                 break
             elif ans =='n':
                 break

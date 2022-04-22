@@ -5,34 +5,35 @@ import couchdb
 import json
 import hashlib
 import hmac
-import binascii
+import os
 import findDoc
 import symcrytjson
 import updateadmin
 def updateregistrar(key):
     while(True):
         while(True):
-            registrarname = input("Enter registrar name : ")
-            if registrarname == "back":
+            registrarid = input("Enter registrar id : ")
+            if registrarid == "back":
                 break
-            elif registrarname == "exit":
+            elif registrarid == "exit":
                 exit()
-            wanteddoc = findDoc.findDoc(key,registrarname,"section1_staff")
+            wanteddoc = findDoc.findDoc(key,registrarid,"section1_staff")
             section_no=1
             while wanteddoc == "none": #find registrar's document in every staff database
                 section_no += 1
                 if section_no==6:
-                    print("There is no {}'s document stored in the system".format(registrarname))
+                    print("There is no {}'s document stored in the system".format(registrarid))
                     break
-                wanteddoc = findDoc.findDoc(key,registrarname,"section{}_staff".format(section_no))
+                wanteddoc = findDoc.findDoc(key,registrarid,"section{}_staff".format(section_no))
+
             if wanteddoc != "none":
                 decdoc = symcrytjson.decryptjson(key,wanteddoc)
                 decdoc_lite = {"name": "{}".format(decdoc["name"]), "password": "", "role": "{}".format(decdoc["role"]), "accessdb": "{}".format(decdoc["accessdb"])}
                 decdoc_sorted = json.dumps(decdoc_lite,indent = 6)
-                print("{}'s document : \n{}".format(registrarname,decdoc_sorted))
+                print("{}'s document : \n{}".format(registrarid,decdoc_sorted))
                 
                 while(True):
-                    edit_attr = input("Which {}'s attributes do you want to edit? (back->Enter staff name, exit->exit the program):".format(registrarname))
+                    edit_attr = input("Which {}'s attributes do you want to edit? (back->Enter staff name, exit->exit the program):".format(registrarid))
                     if edit_attr in decdoc:
                         while(True):
                             if edit_attr != "password":
@@ -57,23 +58,27 @@ def updateregistrar(key):
 
                             if edit_attr != "password" or confirm == new_val:
                                 #apply new value to the selected attribute 
+                                if edit_attr == "name":
+                                    origName = decdoc["name"]
                                 decdoc[edit_attr] = new_val
 
                                 #covert the edited document to string
                                 edited_decdoc_string = json.dumps(decdoc)
-
+                                edited_decdoc_string_sorted = json.dumps(decdoc, indent = 3)
                                 #encrypt the edited document
                                 encrypted_edited_decdoc = symcrytjson.encryptjson(key,edited_decdoc_string)
 
                                 #reindent the edited document
-                                edited_decdoc_sorted = json.dumps(decdoc, indent = 6)
+                                edited_decdoc_sorted = json.dumps(decdoc, indent = 3)
 
                                 #reindent the encryted edited document
-                                encrypted_edited_decdoc_sorted = json.dumps(encrypted_edited_decdoc, indent = 6)
+                                encrypted_edited_decdoc_sorted = json.dumps(encrypted_edited_decdoc, indent = 3)
 
                                 #print the results
-                                print("Edited {}'s document: \n{}".format(registrarname,edited_decdoc_sorted))
-                                print("Encrypted edited {}'s document: \n{}".format(registrarname,encrypted_edited_decdoc_sorted))
+                                edited_doc_lite = {"name": "{}".format(decdoc["name"]), "password": "", "role": "{}".format(decdoc["role"]), "accessdb": "{}".format(decdoc["accessdb"])}
+                                edited_doc_lite_sorted = json.dumps(edited_doc_lite, indent = 3)
+                                print("Edited {}'s document: \n{}".format(registrarid,edited_doc_lite_sorted))
+                                print("Encrypted edited {}'s document: \n{}".format(registrarid,encrypted_edited_decdoc_sorted))
 
                                 #update to the database
                                 while(True): #If user input the unexpected command then ask again
@@ -81,9 +86,15 @@ def updateregistrar(key):
                                     if confirm == "y":
                                         try:
                                             couch = couchdb.Server('http://{}:{}@localhost:5984/'.format("nontawat","non123"))
-                                            db = couch[section_no]
+                                            db = couch["section{}_staff".format(section_no)]
                                             db.delete(wanteddoc)
                                             db.save(encrypted_edited_decdoc)
+                                            #delete original local file name
+                                            f = open('./section{}_staff/{}_{}.json'.format(section_no,registrarid,origName), 'w') #delete local file
+                                            f.close()
+                                            os.remove(f.name)
+                                            with open('./section{}_staff/{}_{}.json'.format(section_no,registrarid,decdoc["name"]),'w') as file:
+                                                file.write(edited_decdoc_string_sorted)
                                             print("The document has been saved to {}".format(db.name))
                                         except(couchdb.http.ServerError):
                                             print("Cannot save the document")

@@ -6,7 +6,7 @@ import couchdb
 import json
 import hashlib
 import hmac
-import binascii
+import os
 import findDoc
 import symcrytjson
 import registrar
@@ -18,13 +18,13 @@ def updatestaff(key,staffdb):
     #Enter staff name
     while(True):
         while(True):
-            staffname = input("Enter staff name: ")
+            staffid = input("Enter staff id: ")
             #type "exit" to terminate the program
-            if staffname == "exit":
+            if staffid == "exit":
                 exit()
-            elif staffname == "back":
+            elif staffid == "back":
                 registrar.registrar(key,staffdb)
-            wanteddoc = findDoc.findDoc(key,staffname,staffdb)
+            wanteddoc = findDoc.findDoc(key,staffid,staffdb)
 
             if wanteddoc != "none": #if function findDoc found the document then break the while loop
                 break
@@ -32,10 +32,10 @@ def updatestaff(key,staffdb):
         decdoc = symcrytjson.decryptjson(key,wanteddoc)
         decdoc_lite = {"name": "{}".format(decdoc["name"]), "password": "", "role": "{}".format(decdoc["role"]), "accessdb": "{}".format(decdoc["accessdb"])}
         decdoc_sorted = json.dumps(decdoc_lite,indent = 6)
-        print("{}'s document: \n{}".format(staffname,decdoc_sorted))
+        print("{}'s document: \n{}".format(staffid,decdoc_sorted))
 
         while(True):
-            edit_attr = input("Which {}'s attributes do you want to edit? (back->Enter staff name, exit->exit the program):".format(staffname))
+            edit_attr = input("Which {}'s attributes do you want to edit? (back->Enter staff name, exit->exit the program):".format(staffid))
             if edit_attr in decdoc:
                 while(True):
                     if edit_attr != "password":
@@ -60,11 +60,13 @@ def updatestaff(key,staffdb):
 
                     if edit_attr != "password" or confirm == new_val:
                         #apply new value to the selected attribute 
+                        if edit_attr == "name":
+                            origName = decdoc["name"]
                         decdoc[edit_attr] = new_val
 
                         #covert the edited document to string
                         edited_decdoc_string = json.dumps(decdoc)
-
+                        edited_decdoc_string_sorted = json.dumps(decdoc,indent = 3)
                         #encrypt the edited document
                         encrypted_edited_decdoc = symcrytjson.encryptjson(key,edited_decdoc_string)
 
@@ -77,8 +79,8 @@ def updatestaff(key,staffdb):
                         #print the results
                         
                         edited_doc_lite = {"name": "{}".format(decdoc["name"]), "password": "", "role": "{}".format(decdoc["role"]), "accessdb": "{}".format(decdoc["accessdb"])}
-                        print("Edited {}'s document: \n{}".format(staffname,edited_doc_lite))
-                        print("Encrypted edited {}'s document: \n{}".format(staffname,encrypted_edited_decdoc_sorted))
+                        print("Edited {}'s document: \n{}".format(staffid,edited_doc_lite))
+                        print("Encrypted edited {}'s document: \n{}".format(staffid,encrypted_edited_decdoc_sorted))
 
                         #update to the database
                         while(True): #If user input the unexpected command then ask again
@@ -89,6 +91,12 @@ def updatestaff(key,staffdb):
                                     db = couch[staffdb]
                                     db.delete(wanteddoc)
                                     db.save(encrypted_edited_decdoc)
+                                    #delete original local file name
+                                    f = open('./section{}_staff/{}_{}.json'.format(staffdb[7],staffid,origName), 'w') #delete local file
+                                    f.close()
+                                    os.remove(f.name)
+                                    with open('./section{}_staff/{}_{}.json'.format(staffdb[7],staffid,decdoc["name"]),'w') as file:
+                                        file.write(edited_decdoc_string_sorted)
                                     print("The document has been saved to {}".format(db.name))
                                 except(couchdb.http.ServerError):
                                     print("Cannot save the document")

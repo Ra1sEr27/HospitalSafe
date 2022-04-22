@@ -8,22 +8,22 @@ import hmac
 import binascii
 import findDoc
 import symcrytjson
-
+import os
 def deleteregistrar(key):
     while(True):
-        registrarname = input("Enter registrar name (type exit to exit the program): ")
-        if registrarname == "exit":
+        registrarid = input("Enter registrar id (type exit to exit the program): ")
+        if registrarid == "exit":
             exit()
-        elif registrarname == "back":
+        elif registrarid == "back":
             break
         #find the document
         section_no=0
         while(True): #find registrar's document in every staff database
             section_no += 1
             if section_no==6:
-                print("There is no {}'s document stored in the system".format(registrarname))
+                print("There is no {}'s document stored in the system".format(registrarid))
                 break
-            wanteddoc = findDoc.findDoc(key,registrarname,"section{}_staff".format(section_no))
+            wanteddoc = findDoc.findDoc(key,registrarid,"section{}_staff".format(section_no))
             if wanteddoc != "none": #found the document
                 break
         if wanteddoc != "none":
@@ -38,7 +38,10 @@ def deleteregistrar(key):
                     couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
                     db1 = couch["section{}_staff".format(section_no)]
                     db1.delete(wanteddoc)
-                    print("{}'s document has been deleted".format(registrarname))
+                    f = open('./section{}_patient/{}_{}.json'.format(section_no,registrarid,decdoc["name"]), 'w') #delete local file
+                    f.close()
+                    os.remove(f.name)
+                    print("{}'s document has been deleted".format(registrarid))
                     break
                 elif ans =='n':
                     break

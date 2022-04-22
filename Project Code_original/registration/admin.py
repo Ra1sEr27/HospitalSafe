@@ -12,7 +12,7 @@ import updateregistrar, deleteregistrar
 import create, drop
 import getalldoc
 
-def admin(key,adminname):
+def admin(key,adminid):
     while(True):
         sqlcommand = input("Which type SQL commands do you want to use? (DDL,DML,back) : ")
         sqlcommand = sqlcommand.lower()
@@ -44,9 +44,9 @@ def admin(key,adminname):
                         elif command1 == "modify":
                             command = input("What do you want to do with the document? (update,delete,back): ")
                             if command =="update":
-                                updateadmin.updateadmin(key,adminname)
+                                updateadmin.updateadmin(key,adminid)
                             elif command =="delete":
-                                deleteadmin.deleteadmin(key,adminname)
+                                deleteadmin.deleteadmin(key,adminid)
                             elif command =="back": # exit the if-statement
                                 break
                             else:

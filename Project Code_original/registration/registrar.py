@@ -5,7 +5,7 @@ import couchdb
 import json
 import hashlib
 import hmac
-import binascii
+
 import insertpatient
 import updatepatient
 import deletepatient
@@ -34,7 +34,7 @@ def registrar(key,accessdb):
         print("Database {} is not existed".format(accessdb))
         return False
     while(True):
-        type = input("Which types of document do you want to view/insert/modify? (medical staff,patient,back): ")
+        type = input("Which types of document do you want to view/insert/modify? (medical staff,patient,logout): ")
         if type == "patient":
             while(True):
                 command1 = input("Which tasks do you want to do? (view,insert,modify,back): ")
@@ -63,7 +63,7 @@ def registrar(key,accessdb):
                     print("Invalid command")
         elif type == "medical staff":
             while(True):
-                command1 = input("Which tasks do you want to do? (view/insert,modify,back): ")
+                command1 = input("Which tasks do you want to do? (view,insert,modify,back): ")
                 
                 if command1 == "view":
                     getalldoc.getalldoc(key, accessdb)
@@ -84,8 +84,8 @@ def registrar(key,accessdb):
                     break
                 else:
                     print("Invalid command")
-        elif type == "back":
-            exit()
+        elif type == "logout":
+            break
         else:
             print("Invalid type, please try again")
 
