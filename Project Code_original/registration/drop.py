@@ -1,33 +1,28 @@
 from cryptography.fernet import Fernet
-import onetimepad
-import getpass
-import couchdb
-import json
-import hashlib
-import hmac
-import binascii
+from pymongo import MongoClient
+import pymongo
 
 def drop():
     #code for testing
 
-    couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
-
-
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+    mydb = client['Hospital']
     while(True): #keep asking for db name
-        dbname = input("Enter database name: ")
+        colname = input("Enter collection name: ")
         #type "exit" to terminate the program
-        if dbname == "exit":
+        if colname == "exit":
             exit()
-        elif dbname == "back":
+        elif colname == "back":
             break
-        elif dbname not in couch:
-            print("Database {} is not existed, please re-enter the database name.".format(dbname))
+            
         else:
             while(True): #keep asking for comfirmation
-                confirm = input("Do you want to delete the {} database? (y/n/exit): ".format(dbname))
+                confirm = input("Do you want to delete the {} database? (y/n/exit): ".format(colname))
                 if confirm == "y":
-                    couch.delete(dbname)
-                    print("Database {} has been deleted".format(dbname))
+                    mycol = mydb[colname]
+                    
+                    mycol.drop()
+                    print("Database {} has been deleted".format(colname))
                     break
                 elif confirm == "n":
                     break

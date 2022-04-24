@@ -2,7 +2,8 @@
 from cryptography.fernet import Fernet
 import onetimepad
 import getpass
-import couchdb
+from pymongo import MongoClient
+import pymongo
 import json
 import hashlib
 import hmac
@@ -14,9 +15,9 @@ import getpass
 
 
 def updateadmin(key,adminid):
-    couch = couchdb.Server('http://{}:{}@localhost:5984/'.format("nontawat","non123"))
-    db = couch["admin"]   
-    
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+    db = client["Hospital"]   
+    admincol = db["admin"]
     wanteddoc = findDoc.findDoc(key,adminid,"admin")
 
     if wanteddoc != "none": #if function findDoc found the document then break the while loop
@@ -79,8 +80,8 @@ def updateadmin(key,adminid):
                             confirm = input("Do you want to save the above encrypted document? (y/n/exit): ")
                             if confirm == "y":
                                 try:
-                                    db.delete(wanteddoc)
-                                    db.save(encrypted_edited_decdoc)
+                                    admincol.delete_one(wanteddoc)
+                                    admincol.insert_one(encrypted_edited_decdoc)
                                     #delete original local file name
                                     f = open('./admin/{}_{}.json'.format(adminid,origName), 'w') #delete local file
                                     f.close()

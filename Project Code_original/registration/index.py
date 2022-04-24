@@ -1,7 +1,6 @@
 from cryptography.fernet import Fernet
 import onetimepad
 import getpass
-import couchdb
 import findDoc
 import symcrytjson
 import getpass

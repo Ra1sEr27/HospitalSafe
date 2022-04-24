@@ -1,16 +1,17 @@
 from cryptography.fernet import Fernet
 import onetimepad
 import getpass
-import couchdb
-import json
+from pymongo import MongoClient
+import pymongo
 import hashlib
 import hmac
 import binascii
 
-def findDoc(key,id,db):
 
-    couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
-    db = couch[db]
+def findDoc(key,id,db): #WIP
+
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+    mydb = client[db]
     id_byte = str.encode(id)
     #generate MAC from patient id
     newhmac = hmac.new(key, id_byte, digestmod=hashlib.sha256)

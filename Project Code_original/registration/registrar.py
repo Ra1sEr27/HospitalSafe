@@ -1,10 +1,4 @@
 from cryptography.fernet import Fernet
-import onetimepad
-import getpass
-import couchdb
-import json
-import hashlib
-import hmac
 
 import insertpatient
 import updatepatient
@@ -15,21 +9,21 @@ import updatestaff
 import getalldoc
 
 def registrar(key,accessdb):
-    if accessdb in ("db1","hospital_section1","section1_staff"):
-        patientdb = "hospital_section1"
-        staffdb = "section1_staff"
-    elif accessdb in ("db2","hospital_section2","section2_staff"):
-        patientdb = "hospital_section2"
-        staffdb = "section2_staff"
-    elif accessdb in ("db3","hospital_section3","section3_staff"):
-        patientdb = "hospital_section3"
-        staffdb = "section3_staff"
-    elif accessdb in ("db4","hospital_section4","section4_staff"):
-        patientdb = "hospital_section4"
-        staffdb = "section4_staff"
-    elif accessdb in ("db5","hospital_section5","section5_staff"):
-        patientdb = "hospital_section5"
-        staffdb = "section5_staff"
+    if accessdb in ("db1","section1-patient","section1-staff"):
+        patientdb = "section1-patient"
+        staffdb = "section1-staff"
+    elif accessdb in ("db2","section-patient2","section2-staff"):
+        patientdb = "section2-patient"
+        staffdb = "section2-staff"
+    elif accessdb in ("db3","section-patient3","section3-staff"):
+        patientdb = "section3-patient"
+        staffdb = "section3-staff"
+    elif accessdb in ("db4","section-patient4","section4-staff"):
+        patientdb = "sectio4-patient"
+        staffdb = "section4-staff"
+    elif accessdb in ("db5","section-patient5","section5-staff"):
+        patientdb = "section5-patient"
+        staffdb = "section5-staff"
     else:
         print("Database {} is not existed".format(accessdb))
         return False

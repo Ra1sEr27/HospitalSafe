@@ -1,8 +1,8 @@
 
 from cryptography.fernet import Fernet
 import onetimepad
-import getpass
-import couchdb
+from pymongo import MongoClient
+import pymongo
 import json
 import hashlib
 import hmac
@@ -10,11 +10,14 @@ import os
 import findDoc
 import symcrytjson
 import registrar
+from pymongo import MongoClient
+import pymongo
 
 
 def updatepatient(key,patientdb):
-    couch = couchdb.Server('http://{}:{}@localhost:5984/'.format("nontawat","non123"))
-    db = couch[patientdb]   
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+    db = client['Hospital']
+    patientcol = db[patientdb]
     #Enter patient name
     while(True):
         while(True):
@@ -70,8 +73,8 @@ def updatepatient(key,patientdb):
                             confirm = input("Do you want to save the above encrypted document? (y/n/exit): ")
                             if confirm == "y":
                                 try:
-                                    db.delete(wanteddoc)
-                                    db.save(encrypted_edited_decdoc)
+                                    patientcol.delete_one(wanteddoc)
+                                    patientcol.insert_one(encrypted_edited_decdoc)
                                     #delete original local file name
                                     f = open('./section{}_patient/{}_{}.json'.format(patientdb[16],pid,origName), 'w') #delete local file
                                     f.close()

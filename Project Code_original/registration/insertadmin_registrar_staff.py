@@ -4,6 +4,8 @@ from cryptography.fernet import Fernet
 import os
 import getpass
 import couchdb
+from pymongo import MongoClient
+import pymongo
 import json
 import hashlib
 import hmac
@@ -13,13 +15,18 @@ import symcrytjson
 import getpass
 import registrar
 import admin
+
 def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
     while(True):
         try:
+            client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+
+            mydb = client["Hospital"]
+            mycol = mydb[accessdb]
             # connect to the DB
-            couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
+            #couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
             
-            db= couch[accessdb]
+            #db= couch[accessdb]
         except(couchdb.http.Unauthorized,couchdb.http.ResourceNotFound):
             print("Database is not existed")
         #print("---Type exit or back to go back to registrar---")
@@ -108,7 +115,7 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
         # Convert JSON to string
         doc = json.dumps(doc)
         #encrypt the document
-        doc_encrypted = symcrytjson.encryptjson(key,doc)
+        doc_encrypted = encryptjson(key,doc)
         doc_encrypted_sorted = json.dumps(doc_encrypted, indent = 3)
         print("Encrypted document: \n", doc_encrypted_sorted)
         confirm = input("Do you want to insert the above encrypted document? (y/n/back/exit): ")
@@ -120,8 +127,9 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
                 elif staff_id[0] in ("r","m"): #save to staff folder
                     with open('./section{}_staff/{}_{}.json'.format(section_no,staff_id,username),'w') as file:
                         file.write(doc_sorted)
-                db.save(doc_encrypted)
-                print("The document has been saved to {}.".format(db.name))
+
+                x = mycol.insert_one(doc_encrypted)
+                print("The document has been saved to {} (id: {}).".format(accessdb,x.inserted_id))
             except(couchdb.http.ServerError):
                 print("Cannot save the document")
         elif confirm == "n":
@@ -132,4 +140,40 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
             exit()
         else:
             print("Invalid command, please try again")
-            
+
+def encryptjson(key,data_string):
+
+    #convert string to JSON
+    data_json = json.loads(data_string)
+    #store name in name variable
+    id = data_json["id"]
+    #convert string to byte for encryption
+    data_byte = str.encode(data_string)
+    
+    # convert pname to byte format
+    id_byte = str.encode(id)
+    # this encrypts the data read from your json and stores it in 'encrypted'
+    fernet = Fernet(key)
+    encrypted = fernet.encrypt(data_byte)
+    
+    # create MAC from key and data
+    mac = hmac.new(key, data_byte, hashlib.sha256).digest()
+    hmac1 = hmac.new(key, id_byte, digestmod=hashlib.sha256)
+    #Create MD from hmac1
+    md1 = hmac1.hexdigest()
+
+    mac = mac.decode('ISO-8859-1')
+
+    # convert bytes to string
+    encrypted = encrypted.decode("ISO-8859-1")
+    #encpname = encpname.decode("utf-8")
+
+    # Upload ciphertext, MD and MAC to MongoDB
+    doc = {'MD_id': '{}'.format(md1), 'CT': '{}'.format(
+        encrypted), 'MAC': '{}'.format(mac)}
+
+    return doc
+    
+# with open('admin.key', 'rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key
+#     admin_key = file.read()
+# insertadmin_registrar_staff(admin_key,"admin","inserterrole","admin")

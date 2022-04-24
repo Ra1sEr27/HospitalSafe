@@ -8,6 +8,8 @@ import hmac
 import os
 import findDoc
 import symcrytjson
+from pymongo import MongoClient
+import pymongo
 
 def deleteadmin(key,adminid):
     wanteddoc = findDoc.findDoc(key,adminid,"admin")
@@ -20,9 +22,10 @@ def deleteadmin(key,adminid):
         while(True):
             ans = input("Do you want to delete this document? (y/n/exit): ")
             if ans =='y':
-                couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
-                db1 = couch["admin"]
-                db1.delete(wanteddoc)
+                client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+                mydb = client['Hospital'] #connect to db
+                mycol = mydb['admin']
+                mycol.delete_one(wanteddoc)
                 f = open('./admin/{}_{}.json'.format(adminid,decdoc["name"]), 'w') #delete local file
                 f.close()
                 os.remove(f.name)

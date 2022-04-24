@@ -15,8 +15,8 @@ username = 'nontawat'
 password = 'non123'
 couch = couchdb.Server('http://{}:{}@localhost:5984/'.format(username,password))
 
-#for dbname in couch:
-    #print(dbname)
+for dbname in couch:
+    print(dbname)
 db = couch["hospital_section1"]
 thislist = []
 for item in db.view('onlyCT/CTview'):
@@ -158,6 +158,58 @@ def findall_ageofpatients_below(real_age):
         else:
             print("no one")
 
+def findall_height(height):
+    templist = []
+    declist = []
+    for i in range (len(thislist)):
+        with open('section1_staff.key', 'rb') as file:
+            key = file.read()
+        testbyte = str.encode(thislist[i])
+        fernet = Fernet(key)
+        decdoc = fernet.decrypt(testbyte)
+        data = decdoc.decode('UTF-8')
+        data = json.loads(data)
+        declist.append(data)
+        print("test--------------------------:",len(declist))
+        #print(decdoc)
+        #print(type(decdoc))
+        #print(decdoc.decode('UTF-8'))
+    for i in range(len(declist)):
+        if (declist[i]["nationality"] == height):
+            templist.append(declist[i])
+    No = len(templist)
+    print("There are ",No,"people.")
+    print("test------------------------------",type(templist))
+    for i in range(len(templist)):
+        print(templist[i]["name"] + "------------>" + templist[i]["height"] + 'cm')
+    return templist
+
+def findall_weight(weight):
+    templist = []
+    declist = []
+    for i in range (len(thislist)):
+        with open('section1_staff.key', 'rb') as file:
+            key = file.read()
+        testbyte = str.encode(thislist[i])
+        fernet = Fernet(key)
+        decdoc = fernet.decrypt(testbyte)
+        data = decdoc.decode('UTF-8')
+        data = json.loads(data)
+        declist.append(data)
+        print("test--------------------------:",len(declist))
+        #print(decdoc)
+        #print(type(decdoc))
+        #print(decdoc.decode('UTF-8'))
+    for i in range(len(declist)):
+        if (declist[i]["nationality"] == weight):
+            templist.append(declist[i])
+    No = len(templist)
+    print("There are ",No,"people.")
+    print("test------------------------------",type(templist))
+    for i in range(len(templist)):
+        print(templist[i]["name"] + "------------>" + templist[i]["weight"] + 'kg')
+    return templist
+
 test = input("what do you want to know?")
 if (test == "patient_info"):
     patientname = input("Insert the name:")
@@ -171,3 +223,5 @@ elif (test == "patient_bloodtype"):
 elif (test == "patient_age"):
 	patientage = input("Insert age:")
 	findall_ageofpatients_below(patientage)
+else:
+    print("The command does not exist, please try again")

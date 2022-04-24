@@ -1,11 +1,5 @@
 from cryptography.fernet import Fernet
-import onetimepad
-import getpass
-import couchdb
-import json
-import hashlib
-import hmac
-import binascii
+
 import insertadmin_registrar_staff
 import updateadmin, deleteadmin
 import updateregistrar, deleteregistrar

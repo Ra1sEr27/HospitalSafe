@@ -4,8 +4,8 @@ import getpass
 import couchdb
 import json
 import hashlib
-import hmac
-import binascii
+from pymongo import MongoClient
+import pymongo
 import findDoc
 import symcrytjson
 import os
@@ -30,16 +30,10 @@ def deletepatient(key,patientdb):
                 while(True): #keep asking for the confirmation
                     ans = input("Do you want to delete this document? (y/n/exit): ")
                     if ans =='y':
-                        couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
-                        
-                        # delete from main database
-                        db1 = couch[patientdb]
-                        db1.delete(wanteddoc)
-                        
-                        # delete from views database
-                        viewdb = patientdb+"_views"
-                        db2 = couch[viewdb]
-                        db2.delete(wanteddoc_views)
+                        client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+                        mydb = client['Hospital'] #connect to db
+                        mycol = mydb[patientdb]
+                        mycol.delete_one(wanteddoc)
                         
                         #delete local document
                         f = open('./section{}_patient/{}_{}.json'.format(patientdb[16],pid,decdoc["name"]), 'w') #delete local file

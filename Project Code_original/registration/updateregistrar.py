@@ -1,7 +1,8 @@
 from cryptography.fernet import Fernet
 import onetimepad
 import getpass
-import couchdb
+from pymongo import MongoClient
+import pymongo
 import json
 import hashlib
 import hmac
@@ -85,10 +86,11 @@ def updateregistrar(key):
                                     confirm = input("Do you want to save the above encrypted document? (y/n/exit): ")
                                     if confirm == "y":
                                         try:
-                                            couch = couchdb.Server('http://{}:{}@localhost:5984/'.format("nontawat","non123"))
-                                            db = couch["section{}_staff".format(section_no)]
-                                            db.delete(wanteddoc)
-                                            db.save(encrypted_edited_decdoc)
+                                            client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+                                            db = client['Hospital'] #connect to db
+                                            staffcol = db["section{}-staff".format(section_no)]
+                                            staffcol.delete_one(wanteddoc)
+                                            staffcol.insert_one(encrypted_edited_decdoc)
                                             #delete original local file name
                                             f = open('./section{}_staff/{}_{}.json'.format(section_no,registrarid,origName), 'w') #delete local file
                                             f.close()

@@ -1,11 +1,9 @@
 from cryptography.fernet import Fernet
-import onetimepad
-import getpass
-import couchdb
+
 import json
 import hashlib
-import hmac
-import binascii
+from pymongo import MongoClient
+import pymongo
 import findDoc
 import symcrytjson
 import os
@@ -30,9 +28,10 @@ def deletestaff(key,staffdb):
         while(True):
             ans = input("Do you want to delete this document? (y/n/exit): ")
             if ans =='y':
-                couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
-                db1 = couch[staffdb]
-                db1.delete(wanteddoc)
+                client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+                mydb = client['Hospital'] #connect to db
+                mycol = mydb[staffdb] #connect to collection
+                mycol.delete_one(wanteddoc)
                 f = open('./section{}_patient/{}_{}.json'.format(staffdb[7],staffid,decdoc["name"]), 'w') #delete local file
                 f.close()
                 os.remove(f.name)

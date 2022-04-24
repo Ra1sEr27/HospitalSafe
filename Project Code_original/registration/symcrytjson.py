@@ -3,7 +3,7 @@ from cryptography.fernet import Fernet
 import cryptography
 import onetimepad
 import getpass
-import couchdb
+
 import json
 import hashlib
 import hmac
@@ -36,7 +36,7 @@ def encryptjson(key,data_string):
     encrypted = encrypted.decode("ISO-8859-1")
     #encpname = encpname.decode("utf-8")
 
-    # Upload ciphertext, MD and MAC to CouchDB
+    # Upload ciphertext, MD and MAC to MongoDB
     doc = {'MD_id': '{}'.format(md1), 'CT': '{}'.format(
         encrypted), 'MAC': '{}'.format(mac)}
 
@@ -59,10 +59,15 @@ def decryptjson(key,doc):
         with open('section{}_staff.key'.format(i),'rb') as file:
             check_key = file.read()
         
+        
+    print("index: ",i)
+    print("K :",key)
+    print("CK :",check_key)
     try:
         decdoc = fernet.decrypt(CTbytes)
     except(cryptography.fernet.InvalidToken or cryptography.exceptions.InvalidSignature):
         print("The data has been modified")
+        print("Detected from section: ",str(i))
         keyrevocation.keyrevocation(str(i))
         return False
 

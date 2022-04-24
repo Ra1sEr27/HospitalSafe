@@ -7,13 +7,15 @@ import json
 import os
 import symcrytjson
 import registrar
+from pymongo import MongoClient
+import pymongo
 def insertpatient(key,patientdb):
     
     try:
         # connect to the DB
-        couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
-        db = couch[patientdb] # main
-        db_views = couch[patientdb+'_views']    # views
+        client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+        mydb = client['Hospital']
+        mycol = mydb[patientdb]
     except(couchdb.http.Unauthorized):
         print("Invalid username or password")
     if entername() == "back":
@@ -119,17 +121,13 @@ def insertpatient(key,patientdb):
         if confirm == "y":
             try:
                 # main database
-                db.save(doc_encrypted)
-                
-                # views database
-                db_views.save(doc_encrypted_views)
-
+                id = mycol.insert_one(doc_encrypted)
+                print("The document has been saved to {} (id: {}).".format(patientdb,id.inserted_id))
                 #save to local storage
                 with open('./section{}_patient/{}_{}.json'.format(section_no,patient_id,name),'w') as file:
                     file.write(doc_sorted)
                 
-                print("The document has been saved to {}".format(db.name))
-                print("The document has been saved to {}".format(db_views.name))
+                print("The document has been saved to {} (id: {}).".format(patientdb,id.inserted_id))
                 
             except(couchdb.http.ServerError):
                 print("Cannot save the document")
