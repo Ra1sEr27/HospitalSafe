@@ -1,3 +1,4 @@
+from types import NoneType
 from cryptography.fernet import Fernet
 import onetimepad
 import getpass
@@ -26,8 +27,12 @@ def index():
             admin_key = file.read()
         
         wanteddoc = findDoc.findDoc(admin_key,id,"admin") #find document in admin database
-        if wanteddoc != "none":
+        if type(wanteddoc) != NoneType: #user is admin
+            #print(wanteddoc)
+            start = timeit.default_timer()
             decryptcheck = symcrytjson.decryptjson(admin_key, wanteddoc)
+            stop = timeit.default_timer()
+            print('Time: ', stop - start)
             id_check = decryptcheck["id"]
             password_check = decryptcheck["password"]
             sa = 'a' # admin
@@ -35,8 +40,9 @@ def index():
         ############## finding a staff ##############
         
         section_no=0
-        while wanteddoc == "none": #find registrar's document in every staff database when the user is not an admin
+        while type(wanteddoc) == NoneType: #find registrar's document in every staff database when the user is not an admin
             section_no += 1
+            print(section_no)
             if section_no==4:
                 print("There is no {}'s document stored in the system".format(id))
                 sa = "none" # not found any staff / admin
@@ -46,10 +52,10 @@ def index():
                 print('Time: ', stop - start)
                 
                 break
-            with open('section{}_staff.key'.format(section_no),'rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key
+            with open('section{}-staff.key'.format(section_no),'rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key
                 key_selected = file.read()
-                
-            wanteddoc = findDoc.findDoc(key_selected,id,"section{}_staff".format(section_no))
+
+            wanteddoc = findDoc.findDoc(key_selected,id,"section{}-staff".format(section_no))
             sa = 's' # staff
             
         if(sa == 's'):

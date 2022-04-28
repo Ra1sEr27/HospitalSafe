@@ -1,3 +1,4 @@
+from types import NoneType
 from cryptography.fernet import Fernet
 import onetimepad
 import getpass
@@ -20,14 +21,14 @@ def updateregistrar(key):
                 exit()
             wanteddoc = findDoc.findDoc(key,registrarid,"section1_staff")
             section_no=1
-            while wanteddoc == "none": #find registrar's document in every staff database
+            while type(wanteddoc) == NoneType: #find registrar's document in every staff database
                 section_no += 1
                 if section_no==6:
                     print("There is no {}'s document stored in the system".format(registrarid))
                     break
-                wanteddoc = findDoc.findDoc(key,registrarid,"section{}_staff".format(section_no))
+                wanteddoc = findDoc.findDoc(key,registrarid,"section{}-staff".format(section_no))
 
-            if wanteddoc != "none":
+            if type(wanteddoc) != NoneType: #Found the wanted document
                 decdoc = symcrytjson.decryptjson(key,wanteddoc)
                 decdoc_lite = {"name": "{}".format(decdoc["name"]), "password": "", "role": "{}".format(decdoc["role"]), "accessdb": "{}".format(decdoc["accessdb"])}
                 decdoc_sorted = json.dumps(decdoc_lite,indent = 6)
@@ -67,7 +68,7 @@ def updateregistrar(key):
                                 edited_decdoc_string = json.dumps(decdoc)
                                 edited_decdoc_string_sorted = json.dumps(decdoc, indent = 3)
                                 #encrypt the edited document
-                                encrypted_edited_decdoc = symcrytjson.encryptjson(key,edited_decdoc_string)
+                                encrypted_edited_decdoc = symcrytjson.encryptjson(key,edited_decdoc_string,"")
 
                                 #reindent the edited document
                                 edited_decdoc_sorted = json.dumps(decdoc, indent = 3)
@@ -86,7 +87,7 @@ def updateregistrar(key):
                                     confirm = input("Do you want to save the above encrypted document? (y/n/exit): ")
                                     if confirm == "y":
                                         try:
-                                            client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+                                            client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
                                             db = client['Hospital'] #connect to db
                                             staffcol = db["section{}-staff".format(section_no)]
                                             staffcol.delete_one(wanteddoc)
@@ -98,7 +99,7 @@ def updateregistrar(key):
                                             with open('./section{}_staff/{}_{}.json'.format(section_no,registrarid,decdoc["name"]),'w') as file:
                                                 file.write(edited_decdoc_string_sorted)
                                             print("The document has been saved to {}".format(db.name))
-                                        except(couchdb.http.ServerError):
+                                        except(pymongo.http.ServerError):
                                             print("Cannot save the document")
                                         break
                                     elif confirm == "n":

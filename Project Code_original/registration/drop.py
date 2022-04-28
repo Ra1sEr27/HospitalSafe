@@ -5,7 +5,7 @@ import pymongo
 def drop():
     #code for testing
 
-    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
     mydb = client['Hospital']
     while(True): #keep asking for db name
         colname = input("Enter collection name: ")

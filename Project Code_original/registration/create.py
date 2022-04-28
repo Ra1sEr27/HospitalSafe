@@ -7,7 +7,7 @@ import pymongo
 import insertadmin_registrar_staff
 
 def create():
-    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
     mydb = client["Hospital"]
     while(True): #keep the program running
         colname = input("Enter collection name : ")
@@ -24,4 +24,3 @@ def create():
             print("Database {} has been created".format(colname))
         except(couchdb.http.ServerError):
             print("Illegal database name (Only lowercase characters (a-z), digits (0-9), and any of the characters _, $, (, ), +, -, and / are allowed. Must begin with a letter.)")
-

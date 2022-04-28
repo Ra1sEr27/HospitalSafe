@@ -1,8 +1,5 @@
 #this imports the cryptography package
 from cryptography.fernet import Fernet
-import getpass
-import couchdb
-import hashlib, hmac
 import json
 #binasc
 import sys
@@ -10,17 +7,20 @@ import symcrytjson
 from datetime import date
 #from cloudant import couchdb_admin_party
 #from cloudant.result import Result
+from pymongo import MongoClient
+import pymongo
 
-username = 'nontawat'
-password = 'non123'
-couch = couchdb.Server('http://{}:{}@localhost:5984/'.format(username,password))
+client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
+db = client["Hospital"]   
+mycol = db["CTonly"]
 
-for dbname in couch:
-    print(dbname)
-db = couch["hospital_section1"]
-thislist = []
-for item in db.view('onlyCT/CTview'):
-    thislist.append(item.key)
+print(db.mycol.find())
+#for dbname in db:
+#    print(dbname)
+#db = couch["hospital_section1"]
+#thislist = []
+#for item in db.view('onlyCT/CTview'):
+    #thislist.append(item.key)
     #print(item.key)
     #print(type(item.key))
 #print(thislist)

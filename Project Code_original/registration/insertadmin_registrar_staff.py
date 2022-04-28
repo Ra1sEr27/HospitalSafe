@@ -9,6 +9,7 @@ import pymongo
 import json
 import hashlib
 import hmac
+import timeit
 import binascii
 import ast
 import symcrytjson
@@ -19,7 +20,7 @@ import admin
 def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
     while(True):
         try:
-            client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+            client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
 
             mydb = client["Hospital"]
             mycol = mydb[accessdb]
@@ -77,7 +78,7 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
             dir_list_onlyID = []
             for i in range(len(dir_list)): #append all of the file names from the chosen folder
                 dir_list_onlyID.append(dir_list[i][:7])
-            print(dir_list_onlyID)
+            #print(dir_list_onlyID)
             while(staff_id in dir_list_onlyID): #increase the number of last 4 digits
                 staff_id_last4digits = int(staff_id_last4digits)
                 staff_id_last4digits += 1
@@ -85,7 +86,7 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
                 
                 while(len(staff_id_last4digits) != 4): #pad 0 to the left of last 4 digits
                     staff_id_last4digits = "0" + staff_id_last4digits
-                    print("in loop ",staff_id_last4digits)
+                    #print("in loop ",staff_id_last4digits)
                 staff_id = role[0] +staff_id_first2digits + str(staff_id_last4digits)
         else: #generate admin id
             dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\admin'
@@ -96,7 +97,7 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
             dir_list_onlyID = []
             for i in range(len(dir_list)):
                 dir_list_onlyID.append(dir_list[i][:7])
-            print(dir_list_onlyID)
+            #print(dir_list_onlyID)
             while(staff_id in dir_list_onlyID):
                 staff_id_last4digits = int(staff_id_last4digits)
                 staff_id_last4digits += 1
@@ -104,7 +105,7 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
                 while(len(staff_id_last4digits) != 4):
                     staff_id_last4digits = "0" + staff_id_last4digits
                 staff_id = "a" + "00" + staff_id_last4digits
-        print(staff_id)
+        #print(staff_id)
         # create a json format from input
         
         doc = {"id": "{}".format(staff_id),"name": "{}".format(username), "password": "{}".format(password), "role": "{}".format(role), "accessdb": "{}".format(accessdb)}
@@ -115,7 +116,10 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
         # Convert JSON to string
         doc = json.dumps(doc)
         #encrypt the document
-        doc_encrypted = encryptjson(key,doc)
+        start = timeit.default_timer()
+        doc_encrypted = encryptjson(key,doc,"")
+        stop = timeit.default_timer()
+        print('Time: ', stop - start)
         doc_encrypted_sorted = json.dumps(doc_encrypted, indent = 3)
         print("Encrypted document: \n", doc_encrypted_sorted)
         confirm = input("Do you want to insert the above encrypted document? (y/n/back/exit): ")
@@ -141,8 +145,8 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
         else:
             print("Invalid command, please try again")
 
-def encryptjson(key,data_string):
-
+def encryptjson(key,data_string,oldkey):
+    print("Used key: ",key)
     #convert string to JSON
     data_json = json.loads(data_string)
     #store name in name variable
@@ -158,6 +162,7 @@ def encryptjson(key,data_string):
     
     # create MAC from key and data
     mac = hmac.new(key, data_byte, hashlib.sha256).digest()
+    print("key: {}, id: {}".format(key,id_byte))
     hmac1 = hmac.new(key, id_byte, digestmod=hashlib.sha256)
     #Create MD from hmac1
     md1 = hmac1.hexdigest()
@@ -171,7 +176,31 @@ def encryptjson(key,data_string):
     # Upload ciphertext, MD and MAC to MongoDB
     doc = {'MD_id': '{}'.format(md1), 'CT': '{}'.format(
         encrypted), 'MAC': '{}'.format(mac)}
-
+    doc_string = json.dumps(doc)
+    doc_byte = str.encode(doc_string)
+    # version = '0x80'
+    # iv = os.urandom(128) 
+    # iv = iv.decode('ISO-8859-1')
+    # timestamp = fernet.encrypt_at_time(doc_byte, int(time.time())) 
+    # timestamp = timestamp.decode('ISO-8859-1')
+    # print(hmac1)
+    # print("Version : ",type(version))
+    # print("Timestamp : ",type(timestamp))
+    # print("IV : ",type(iv))
+    # print("CT : ",type(encrypted))
+    # print("HMAC : ",type(hmac1))
+    
+    # print("Version: ",version)
+    # print("\n")
+    # print("Timestamp: ",timestamp)
+    # print("\n")
+    # print("IV: ",iv)
+    # print("\n")
+    # print("Ciphertext: ",encrypted)
+    # print("\n")
+    # print("HMAC: ",hmac1)
+    #print(hmac1)
+        
     return doc
     
 # with open('admin.key', 'rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key

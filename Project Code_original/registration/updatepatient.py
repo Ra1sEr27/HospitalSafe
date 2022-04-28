@@ -15,7 +15,7 @@ import pymongo
 
 
 def updatepatient(key,patientdb):
-    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
     db = client['Hospital']
     patientcol = db[patientdb]
     #Enter patient name
@@ -56,7 +56,7 @@ def updatepatient(key,patientdb):
                         edited_decdoc_string = json.dumps(decdoc)
                         edited_decdoc_string_sorted = json.dumps(decdoc, indent = 6)
                         #encrypt the edited document
-                        encrypted_edited_decdoc = symcrytjson.encryptjson(key,edited_decdoc_string)
+                        encrypted_edited_decdoc = symcrytjson.encryptjson(key,edited_decdoc_string,"")
 
                         #reindent the edited document
                         edited_decdoc_sorted = json.dumps(decdoc, indent = 6)
@@ -82,7 +82,7 @@ def updatepatient(key,patientdb):
                                     with open('./section{}_patient/{}_{}.json'.format(patientdb[16],pid,decdoc["name"]),'w') as file:
                                         file.write(edited_decdoc_string_sorted)
                                     print("The document has been saved to {}".format(db.name))
-                                except(couchdb.http.ServerError):
+                                except(pymongo.http.ServerError):
                                     print("Cannot save the document")
                                 break
                             elif confirm == "n":

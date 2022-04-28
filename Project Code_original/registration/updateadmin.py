@@ -1,4 +1,5 @@
 
+from types import NoneType
 from cryptography.fernet import Fernet
 import onetimepad
 import getpass
@@ -15,12 +16,12 @@ import getpass
 
 
 def updateadmin(key,adminid):
-    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
     db = client["Hospital"]   
     admincol = db["admin"]
     wanteddoc = findDoc.findDoc(key,adminid,"admin")
 
-    if wanteddoc != "none": #if function findDoc found the document then break the while loop
+    if type(wanteddoc) != NoneType: #if function findDoc found the document then break the while loop
         decdoc = symcrytjson.decryptjson(key,wanteddoc)
         decdoc_lite = {"name": "{}".format(decdoc["name"]), "password": "", "role": "{}".format(decdoc["role"])}
         decdoc_sorted = json.dumps(decdoc_lite,indent = 6)
@@ -63,7 +64,7 @@ def updateadmin(key,adminid):
                         edited_decdoc_string = json.dumps(decdoc)
                         edited_decdoc_string_sorted = json.dumps(decdoc, indent = 6)
                         #encrypt the edited document
-                        encrypted_edited_decdoc = symcrytjson.encryptjson(key,edited_decdoc_string)
+                        encrypted_edited_decdoc = symcrytjson.encryptjson(key,edited_decdoc_string,"")
 
                         #reindent the edited document
                         edited_decdoc_sorted = json.dumps(edited_decdoc_lite, indent = 6)
@@ -89,7 +90,7 @@ def updateadmin(key,adminid):
                                     with open('./admin/{}_{}.json'.format(adminid,decdoc["name"]),'w') as file:
                                         file.write(edited_decdoc_string_sorted)
                                     print("The document has been saved to {}".format(db.name))
-                                except(couchdb.http.ServerError):
+                                except(pymongo.http.ServerError):
                                     print("Cannot save the document")
                                 break
                             elif confirm == "n":

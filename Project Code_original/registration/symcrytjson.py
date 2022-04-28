@@ -9,7 +9,7 @@ import hashlib
 import hmac
 import binascii
 import keyrevocation
-def encryptjson(key,data_string):
+def encryptjson(key,data_string,oldkey):
 
     #convert string to JSON
     data_json = json.loads(data_string)
@@ -26,7 +26,9 @@ def encryptjson(key,data_string):
     
     # create MAC from key and data
     mac = hmac.new(key, data_byte, hashlib.sha256).digest()
+    print("key: {}, id: {}".format(key,id_byte))
     hmac1 = hmac.new(key, id_byte, digestmod=hashlib.sha256)
+
     #Create MD from hmac1
     md1 = hmac1.hexdigest()
 
@@ -44,28 +46,30 @@ def encryptjson(key,data_string):
 
 def decryptjson(key,doc):
     #store the stored ciphertext in CT
+    #print(doc)
     CT = doc['CT']
     #store the original MAC to origmac
     origmac = doc['MAC']
     #convert string to byte
     CTbytes = str.encode(CT)
     #decrypt the ciphertext
-    fernet = Fernet(key)
+    
     with open('admin.key','rb') as file:
         check_key = file.read()
+        
     i = 0
     while(key != check_key):
         i+=1
-        with open('section{}_staff.key'.format(i),'rb') as file:
+        with open('section{}-staff.key'.format(i),'rb') as file:
+            
             check_key = file.read()
-        
-        
-    print("index: ",i)
-    print("K :",key)
-    print("CK :",check_key)
+    fernet = Fernet(check_key)
+    # print("index: ",i)
+    # print("K :",key)
+    # print("CK :",check_key)
     try:
         decdoc = fernet.decrypt(CTbytes)
-    except(cryptography.fernet.InvalidToken or cryptography.exceptions.InvalidSignature):
+    except(cryptography.fernet.InvalidToken or cryptography.exceptions.InvalidSignature): 
         print("The data has been modified")
         print("Detected from section: ",str(i))
         keyrevocation.keyrevocation(str(i))

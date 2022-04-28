@@ -56,8 +56,8 @@ def admin(key,adminid):
                             while(True):
                                 section_no = input("Enter section number (1-3): ")
                                 if section_no in ("1","2","3"):
-                                    staffdb = "section{}_staff".format(section_no)
-                                    with open('section{}_staff.key'.format(section_no),'rb') as file: #open key for that section
+                                    staffdb = "section{}-staff".format(section_no)
+                                    with open('section{}-staff.key'.format(section_no),'rb') as file: #open key for that section
                                         key = file.read()
                                     break
                                 elif section_no == "back":
@@ -69,7 +69,7 @@ def admin(key,adminid):
                             if command1 == "insert":
                                 insertadmin_registrar_staff.insertadmin_registrar_staff(key,staffdb,"admin","registrar")
                             elif command1 == "view":
-                                result = getalldoc.getalldoc(key,"section{}_staff".format(section_no))
+                                result = getalldoc.getalldoc(key,"section{}-staff".format(section_no))
                                 if not result:
                                     print("The database has been formatted, due to key leaking")
                             elif command1 == "modify":

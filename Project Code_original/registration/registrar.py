@@ -18,12 +18,6 @@ def registrar(key,accessdb):
     elif accessdb in ("db3","section-patient3","section3-staff"):
         patientdb = "section3-patient"
         staffdb = "section3-staff"
-    elif accessdb in ("db4","section-patient4","section4-staff"):
-        patientdb = "sectio4-patient"
-        staffdb = "section4-staff"
-    elif accessdb in ("db5","section-patient5","section5-staff"):
-        patientdb = "section5-patient"
-        staffdb = "section5-staff"
     else:
         print("Database {} is not existed".format(accessdb))
         return False

@@ -9,11 +9,12 @@ import symcrytjson
 import registrar
 from pymongo import MongoClient
 import pymongo
+import timeit
 def insertpatient(key,patientdb):
     
     try:
         # connect to the DB
-        client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
+        client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
         mydb = client['Hospital']
         mycol = mydb[patientdb]
     except(couchdb.http.Unauthorized):
@@ -21,8 +22,8 @@ def insertpatient(key,patientdb):
     if entername() == "back":
         registrar.registrar(key,patientdb)
     #print(patientdb)
-    section_no = patientdb[16]
-    #print(section_no)
+    section_no = patientdb[7]
+    print(section_no)
     if section_no == "1":
         dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section1_patient'
     elif section_no == "2":
@@ -51,9 +52,7 @@ def insertpatient(key,patientdb):
         while(len(patient_id_last4digits) != 4): #pad 0 to the left of last 4 digits
             patient_id_last4digits = "0" + patient_id_last4digits
             print("in loop ",patient_id_last4digits)
-        patient_id = "p" +patient_id_first2digits + str(patient_id_last4digits)
-
-    print(patient_id)
+        patient_id = "p" + patient_id_first2digits + str(patient_id_last4digits)
     
     doc = {"id":"{}".format(patient_id),
         "name":"{}".format(name),
@@ -99,21 +98,24 @@ def insertpatient(key,patientdb):
     doc_sorted = json.dumps(doc, indent = 3)
     print("Document: \n", doc_sorted)
     
-    # docs for views
-    doc_string_views = json.dumps(doc_views)
-    doc_sorted_views = json.dumps(doc_views, indent = 3)
-    print("ViewDocument: \n", doc_sorted_views)
+    # # docs for views
+    # doc_string_views = json.dumps(doc_views)
+    # doc_sorted_views = json.dumps(doc_views, indent = 3)
+    # print("ViewDocument: \n", doc_sorted_views)
 
     #encrypt the document
-    doc_encrypted = symcrytjson.encryptjson(key,doc_string) 
+    start = timeit.default_timer()
+    doc_encrypted = symcrytjson.encryptjson(key,doc_string,"") 
+    stop = timeit.default_timer()
+    print('Time: ', stop - start)
     doc_encrypted_sorted = json.dumps(doc_encrypted, indent = 3)
     
     
     # docs for views
-    doc_encrypted_views = symcrytjson.encryptjson(key,doc_string_views) 
-    doc_encrypted_sorted_views = json.dumps(doc_encrypted_views, indent = 3)
+    # doc_encrypted_views = symcrytjson.encryptjson(key,doc_string_views) 
+    # doc_encrypted_sorted_views = json.dumps(doc_encrypted_views, indent = 3)
     
-    print("Encrypted view document: \n", doc_encrypted_sorted_views)
+    #print("Encrypted view document: \n", doc_encrypted_sorted_views)
     print("Encrypted document: \n", doc_encrypted_sorted)
     
     while(True):
@@ -126,8 +128,6 @@ def insertpatient(key,patientdb):
                 #save to local storage
                 with open('./section{}_patient/{}_{}.json'.format(section_no,patient_id,name),'w') as file:
                     file.write(doc_sorted)
-                
-                print("The document has been saved to {} (id: {}).".format(patientdb,id.inserted_id))
                 
             except(couchdb.http.ServerError):
                 print("Cannot save the document")
