@@ -9,13 +9,9 @@ import pymongo
 import findDoc
 import symcrytjson
 import os
-def deleteregistrar(key):
+def deleteregistrar(key,registrarid):
     while(True):
-        registrarid = input("Enter registrar id (type exit to exit the program): ")
-        if registrarid == "exit":
-            exit()
-        elif registrarid == "back":
-            break
+
         #find the document
         section_no=0
         while(True): #find registrar's document in every staff database

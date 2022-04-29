@@ -47,16 +47,18 @@ def keyrevocation(target_section):
             
             with open(f, 'rb') as file:
                 local_file = file.read()
-                data = local_file.decode('ISO-8859-1')
-                data = json.loads(data)
+                data_string = local_file.decode('ISO-8859-1')
+                #data = json.loads(data)
             
             with open('section{}-staff.key'.format(target_section),'rb') as file2:
                 new_key = file2.read()
             
-            doc_string = json.dumps(data)
+            #doc_string = json.dumps(data)
             #doc_sorted = json.dumps(local_file, indent = 3)
             
-            doc_encrypted = symcrytjson.encryptjson(new_key,doc_string,"") 
+            print("patient's data: ",data_string)
+            print("Used key: ",new_key)
+            doc_encrypted = symcrytjson.encryptjson(new_key,data_string,"") 
             #doc_encrypted_sorted = json.dumps(doc_encrypted, indent = 3)
             print("Re-encrypted the patient's documents")
             patientcol = mydb["section{}-patient".format(target_section)]
@@ -74,18 +76,17 @@ def keyrevocation(target_section):
             
             #print('staff sec :',target_section)
             
-            with open(f,'rb') as file:
+            with open(fs,'rb') as file:
                 local_file = file.read()
-                data = local_file.decode('ISO-8859-1')
-                data = json.loads(data)
-            
+                data_string = local_file.decode('ISO-8859-1')
+                
             with open('section{}-staff.key'.format(target_section),'rb') as file:
                 new_key = file.read()
-                
-            doc_string = json.dumps(data)
-            
-            doc_encrypted = symcrytjson.encryptjson(new_key,doc_string,"") 
+
+            print("staff's data: ",data_string)
             print("Used key: ",new_key)
+            doc_encrypted = symcrytjson.encryptjson(new_key,data_string,"") 
             print("Re-encrypted the staff's documents")
+            
             staffcol = mydb["section{}-staff".format(target_section)]
             staffcol.insert_one(doc_encrypted)

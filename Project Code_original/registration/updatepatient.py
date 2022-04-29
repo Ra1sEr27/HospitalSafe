@@ -81,7 +81,7 @@ def updatepatient(key,patientdb):
                                     os.remove(f.name)
                                     with open('./section{}_patient/{}_{}.json'.format(patientdb[16],pid,decdoc["name"]),'w') as file:
                                         file.write(edited_decdoc_string_sorted)
-                                    print("The document has been saved to {}".format(db.name))
+                                    print("The document has been saved to {}".format(patientcol.name))
                                 except(pymongo.http.ServerError):
                                     print("Cannot save the document")
                                 break

@@ -61,6 +61,10 @@ def index():
         if(sa == 's'):
             
             decryptcheck = symcrytjson.decryptjson(key_selected, wanteddoc)
+            print(decryptcheck)
+            if not decryptcheck: #if cannot decrypt the document
+                print("Please re-login. Sorry for inconvenient")
+                index()
             id_check = decryptcheck["id"]
             password_check = decryptcheck["password"]
             

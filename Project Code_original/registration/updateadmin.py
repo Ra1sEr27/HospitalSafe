@@ -89,7 +89,7 @@ def updateadmin(key,adminid):
                                     os.remove(f.name)
                                     with open('./admin/{}_{}.json'.format(adminid,decdoc["name"]),'w') as file:
                                         file.write(edited_decdoc_string_sorted)
-                                    print("The document has been saved to {}".format(db.name))
+                                    print("The document has been saved to {}".format(admincol.name))
                                 except(pymongo.http.ServerError):
                                     print("Cannot save the document")
                                 break

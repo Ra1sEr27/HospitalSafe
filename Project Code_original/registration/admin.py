@@ -1,3 +1,4 @@
+from types import NoneType
 from cryptography.fernet import Fernet
 
 import insertadmin_registrar_staff
@@ -5,14 +6,14 @@ import updateadmin, deleteadmin
 import updateregistrar, deleteregistrar
 import create, drop
 import getalldoc
-
+import findDoc
 def admin(key,adminid):
     while(True):
         sqlcommand = input("Which type SQL commands do you want to use? (DDL,DML,back) : ")
         sqlcommand = sqlcommand.lower()
         if sqlcommand == "ddl":
             while(True):
-                type = input("Which type of DDL do you want to do? (create, drop) : ")
+                type = input("Which type of DDL do you want to do? (create, drop, back, exit) : ")
                 type = type.lower()
                 if type == "create":
                     create.create()
@@ -23,7 +24,7 @@ def admin(key,adminid):
                 elif type == "exit":
                     exit()
                 else:
-                    print("Invalid commandm, please try again")
+                    print("Invalid command, please try again")
         elif sqlcommand == "dml":
             while(True):
                 type = input("Which roles of user's document do you want to insert/modify? (admin,registrar,back): ")
@@ -53,19 +54,35 @@ def admin(key,adminid):
                     while(True):
                         command1 = input("Which tasks do you want to do? (view,insert,modify,back): ")
                         if command1 in ("view","insert", "modify"):
-                            while(True):
-                                section_no = input("Enter section number (1-3): ")
-                                if section_no in ("1","2","3"):
-                                    staffdb = "section{}-staff".format(section_no)
-                                    with open('section{}-staff.key'.format(section_no),'rb') as file: #open key for that section
-                                        key = file.read()
-                                    break
-                                elif section_no == "back":
-                                    break
-                                elif section_no == "exit":
-                                    exit()
-                                else:
-                                    print("Invalid section, please try again")
+                            if command1 != "insert":
+                                while(True): #get registrar ID and section no.
+                                    rid = input("Enter registrar's ID: ")
+                                    if section_no == "back":
+                                        break
+                                    elif section_no == "exit":
+                                        exit()
+                                    wanteddoc = findDoc.findDoc(key,rid,staffdb)
+                                    if type(wanteddoc) == NoneType: #if function findDoc found the document then break the while loop
+                                        print("The document does not existed")
+                                    else: #found the document
+                                        break
+                                    section_no = rid[2]
+                            elif command1 == "insert":
+                                while(True): #get section no.
+                                    section_no = input("Enter section number: ")
+                                    if section_no in ("1","2","3"):
+                                        break
+                                    elif section_no == "back":
+                                        break
+                                    elif section_no == "exit":
+                                        exit()
+                                    else:
+                                        print("Invalid section, please try again")
+                            
+                            staffdb = "section{}-staff".format(section_no)
+                            with open('section{}-staff.key'.format(section_no),'rb') as file: #open key for that section
+                                key = file.read()
+                                
                             if command1 == "insert":
                                 insertadmin_registrar_staff.insertadmin_registrar_staff(key,staffdb,"admin","registrar")
                             elif command1 == "view":
@@ -75,9 +92,9 @@ def admin(key,adminid):
                             elif command1 == "modify":
                                 command = input("What do you want to do with this document? (update,delete,back): ")
                                 if command =="update":
-                                    updateregistrar.updateregistrar(key)
+                                    updateregistrar.updateregistrar(key,rid)
                                 elif command =="delete":
-                                    deleteregistrar.deleteregistrar(key)
+                                    deleteregistrar.deleteregistrar(key,rid)
                                 elif command =="back": # exit the if-statement
                                     break
                                 else:

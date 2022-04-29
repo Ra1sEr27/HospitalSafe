@@ -1,4 +1,5 @@
 
+from types import NoneType
 from cryptography.fernet import Fernet
 import onetimepad
 import getpass
@@ -11,23 +12,13 @@ import symcrytjson
 import registrar
 import getpass
 
-def updatestaff(key,staffdb):
-    couch = couchdb.Server('http://{}:{}@localhost:5984/'.format("nontawat","non123"))
-    db = couch[staffdb]   
-    #Enter staff name
-    while(True):
-        while(True):
-            staffid = input("Enter staff id: ")
-            #type "exit" to terminate the program
-            if staffid == "exit":
-                exit()
-            elif staffid == "back":
-                registrar.registrar(key,staffdb)
-            wanteddoc = findDoc.findDoc(key,staffid,staffdb)
+def updatestaff(key,staffdb,staffid):
 
-            if wanteddoc != "none": #if function findDoc found the document then break the while loop
-                break
-        
+        wanteddoc = findDoc.findDoc(key,staffid,staffdb)
+        if type(wanteddoc) == NoneType: #if function findDoc found the document then break the while loop
+            print("The document is not existed")
+            return 0
+            
         decdoc = symcrytjson.decryptjson(key,wanteddoc)
         decdoc_lite = {"name": "{}".format(decdoc["name"]), "password": "", "role": "{}".format(decdoc["role"]), "accessdb": "{}".format(decdoc["accessdb"])}
         decdoc_sorted = json.dumps(decdoc_lite,indent = 6)
@@ -97,7 +88,7 @@ def updatestaff(key,staffdb):
                                     os.remove(f.name)
                                     with open('./section{}_staff/{}_{}.json'.format(staffdb[7],staffid,decdoc["name"]),'w') as file:
                                         file.write(edited_decdoc_string_sorted)
-                                    print("The document has been saved to {}".format(db.name))
+                                    print("The document has been saved to {}".format(staffcol.name))
                                 except(pymongo.http.ServerError):
                                     print("Cannot save the document")
                                 break

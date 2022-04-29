@@ -1,3 +1,4 @@
+from types import NoneType
 from cryptography.fernet import Fernet
 
 import insertpatient
@@ -7,7 +8,7 @@ import insertadmin_registrar_staff
 import deletestaff
 import updatestaff
 import getalldoc
-
+import findDoc
 def registrar(key,accessdb):
     if accessdb in ("db1","section1-patient","section1-staff"):
         patientdb = "section1-patient"
@@ -56,18 +57,28 @@ def registrar(key,accessdb):
                 if command1 == "view":
                     getalldoc.getalldoc(key, accessdb)
                 elif command1 == "insert":
-                    #print("staffdb: ",staffdb)
                     insertadmin_registrar_staff.insertadmin_registrar_staff(key,staffdb,"registrar","medical staff")
                 elif command1 == "modify":
-                    command = input("What do you want to do with this document? (update,delete,back): ")
-                    if command =="update":
-                        updatestaff.updatestaff(key,staffdb)
-                    elif command =="delete":
-                        deletestaff.deletestaff(key,staffdb)
-                    elif command =="back": # exit the if-statement
-                        break
-                    else:
-                        print("Invalid command")
+                    while(True):
+                        sid = input("Enter staff's ID (type 'back' to choose the tasks, 'exit' to exit the program): ")
+                        if sid == "back":
+                            break
+                        elif sid == "exit":
+                            exit()
+                        else:
+                            wanteddoc = findDoc.findDoc(key,sid,staffdb)
+                            if type(wanteddoc) == NoneType: #if function findDoc found the document then break the while loop
+                                print("The document does not existed")
+                            elif type(wanteddoc) != NoneType:
+                                command = input("What do you want to do with this document? (update,delete,back): ")
+                                if command =="update":
+                                    updatestaff.updatestaff(key,staffdb,sid)
+                                elif command =="delete":
+                                    deletestaff.deletestaff(key,staffdb,sid)
+                                elif command =="back": # exit the if-statement
+                                    break
+                                else:
+                                    print("Invalid command")
                 elif command1 == "back":
                     break
                 else:

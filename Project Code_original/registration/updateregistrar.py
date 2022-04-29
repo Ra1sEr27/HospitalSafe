@@ -11,14 +11,7 @@ import os
 import findDoc
 import symcrytjson
 import updateadmin
-def updateregistrar(key):
-    while(True):
-        while(True):
-            registrarid = input("Enter registrar id : ")
-            if registrarid == "back":
-                break
-            elif registrarid == "exit":
-                exit()
+def updateregistrar(key,registrarid):
             wanteddoc = findDoc.findDoc(key,registrarid,"section1_staff")
             section_no=1
             while type(wanteddoc) == NoneType: #find registrar's document in every staff database
@@ -98,7 +91,7 @@ def updateregistrar(key):
                                             os.remove(f.name)
                                             with open('./section{}_staff/{}_{}.json'.format(section_no,registrarid,decdoc["name"]),'w') as file:
                                                 file.write(edited_decdoc_string_sorted)
-                                            print("The document has been saved to {}".format(db.name))
+                                            print("The document has been saved to {}".format(staffcol.name))
                                         except(pymongo.http.ServerError):
                                             print("Cannot save the document")
                                         break
