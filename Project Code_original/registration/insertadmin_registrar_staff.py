@@ -114,10 +114,9 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
         # Convert JSON to string
         doc = json.dumps(doc)
         #encrypt the document
-        start = timeit.default_timer()
+        
         doc_encrypted = encryptjson(key,doc,"")
-        stop = timeit.default_timer()
-        print('Time: ', stop - start)
+        
         doc_encrypted_sorted = json.dumps(doc_encrypted, indent = 3)
         print("Encrypted document: \n", doc_encrypted_sorted)
         confirm = input("Do you want to insert the above encrypted document? (y/n/back/exit): ")
@@ -144,6 +143,7 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
             print("Invalid command, please try again")
 
 def encryptjson(key,data_string,oldkey):
+    start = timeit.default_timer()
     print("Used key: ",key)
     #convert string to JSON
     data_json = json.loads(data_string)
@@ -159,9 +159,9 @@ def encryptjson(key,data_string,oldkey):
     encrypted = fernet.encrypt(data_byte)
     
     # create MAC from key and data
-    mac = hmac.new(key, data_byte, hashlib.sha256).digest()
-    print("key: {}, id: {}".format(key,id_byte))
-    hmac1 = hmac.new(key, id_byte, digestmod=hashlib.sha256)
+    mac = hmac.new(key, data_byte, hashlib.md5).digest()
+    #print("key: {}, id: {}".format(key,id_byte))
+    hmac1 = hmac.new(key, id_byte, digestmod=hashlib.md5)
     #Create MD from hmac1
     md1 = hmac1.hexdigest()
 
@@ -175,29 +175,8 @@ def encryptjson(key,data_string,oldkey):
     doc = {'MD_id': '{}'.format(md1), 'CT': '{}'.format(
         encrypted), 'MAC': '{}'.format(mac)}
     doc_string = json.dumps(doc)
-    doc_byte = str.encode(doc_string)
-    # version = '0x80'
-    # iv = os.urandom(128) 
-    # iv = iv.decode('ISO-8859-1')
-    # timestamp = fernet.encrypt_at_time(doc_byte, int(time.time())) 
-    # timestamp = timestamp.decode('ISO-8859-1')
-    # print(hmac1)
-    # print("Version : ",type(version))
-    # print("Timestamp : ",type(timestamp))
-    # print("IV : ",type(iv))
-    # print("CT : ",type(encrypted))
-    # print("HMAC : ",type(hmac1))
-    
-    # print("Version: ",version)
-    # print("\n")
-    # print("Timestamp: ",timestamp)
-    # print("\n")
-    # print("IV: ",iv)
-    # print("\n")
-    # print("Ciphertext: ",encrypted)
-    # print("\n")
-    # print("HMAC: ",hmac1)
-    #print(hmac1)
+    stop = timeit.default_timer()
+    print('Enc Time: ', stop - start)
     return doc
     
 # with open('admin.key', 'rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key

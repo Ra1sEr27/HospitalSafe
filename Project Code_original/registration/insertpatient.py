@@ -104,10 +104,7 @@ def insertpatient(key,patientdb):
     # print("ViewDocument: \n", doc_sorted_views)
 
     #encrypt the document
-    start = timeit.default_timer()
     doc_encrypted = symcrytjson.encryptjson(key,doc_string,"") 
-    stop = timeit.default_timer()
-    print('Time: ', stop - start)
     doc_encrypted_sorted = json.dumps(doc_encrypted, indent = 3)
     
     

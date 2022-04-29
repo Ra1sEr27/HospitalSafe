@@ -3,14 +3,14 @@ from cryptography.fernet import Fernet
 import cryptography
 import onetimepad
 import getpass
-
+import timeit
 import json
 import hashlib
 import hmac
 import binascii
 import keyrevocation
 def encryptjson(key,data_string,oldkey):
-
+    start = timeit.default_timer()
     #convert string to JSON
     data_json = json.loads(data_string)
     #store name in name variable
@@ -40,10 +40,12 @@ def encryptjson(key,data_string,oldkey):
     # Upload ciphertext, MD and MAC to MongoDB
     doc = {'MD_id': '{}'.format(md1), 'CT': '{}'.format(
         encrypted), 'MAC': '{}'.format(mac)}
-
+    stop = timeit.default_timer()
+    print('Enc Time: ', stop - start)
     return doc
 
 def decryptjson(key,doc):
+    start = timeit.default_timer()
     #store the stored ciphertext in CT
     #print(doc)
     CT = doc['CT']
@@ -63,9 +65,6 @@ def decryptjson(key,doc):
             
             check_key = file.read()
     fernet = Fernet(check_key)
-    # print("index: ",i)
-    # print("K :",key)
-    # print("CK :",check_key)
     try:
         decdoc = fernet.decrypt(CTbytes)
     except(cryptography.fernet.InvalidToken or cryptography.exceptions.InvalidSignature): 
@@ -83,6 +82,8 @@ def decryptjson(key,doc):
     
     #convert string to json format
     decdoc = json.loads(decdoc)
-
+    
+    stop = timeit.default_timer()
+    print('Dec Time: ', stop - start)
     return decdoc
     

@@ -1,12 +1,13 @@
 from types import NoneType
 from cryptography.fernet import Fernet
-
+import pymongo
 import insertadmin_registrar_staff
 import updateadmin, deleteadmin
 import updateregistrar, deleteregistrar
 import create, drop
 import getalldoc
 import findDoc
+import couchdb
 def admin(key,adminid):
     while(True):
         sqlcommand = input("Which type SQL commands do you want to use? (DDL,DML,back) : ")
@@ -68,9 +69,21 @@ def admin(key,adminid):
                                         break
                                     section_no = rid[2]
                             elif command1 == "insert":
-                                while(True): #get section no.
-                                    section_no = input("Enter section number: ")
-                                    if section_no in ("1","2","3"):
+                                client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
+                                mydb = client["Hospital"]
+                                
+                                staffcolnumlist = []
+                                allcollist = mydb.list_collection_names()
+                                for i in range(len(allcollist)):
+                                    if "staff" in allcollist[i]:
+                                        staffcolnumlist.append(allcollist[i][7])
+                                sorted_staffcolnumlist = []
+                                for i in range(len(staffcolnumlist)):
+                                    sorted_staffcolnumlist.append(int(staffcolnumlist[i]))
+                                sorted_staffcolnumlist.sort()
+                                while(True): #check inputted section no.
+                                    section_no = input("Enter section number {}: ".format(sorted_staffcolnumlist))
+                                    if section_no in staffcolnumlist:
                                         break
                                     elif section_no == "back":
                                         break

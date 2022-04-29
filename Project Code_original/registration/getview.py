@@ -3,13 +3,14 @@ from cryptography.fernet import Fernet
 import json
 #binasc
 import sys
-import symcrytjson
 from datetime import date
 #from cloudant import couchdb_admin_party
 #from cloudant.result import Result
 from pymongo import MongoClient
 import pymongo
-
+import timeit
+import index
+import getpass
 client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
 db = client["Hospital"]   
 mycol = db["CTonly"]
@@ -51,10 +52,10 @@ data = json.loads(data)
 #print(data["name"])
 #print(type(data["name"]))   
 '''
-def findpatient_info_byid(Patient_id):
+def findpatient_info_byid(Patient_id, section):
     declist = []
     for i in range (len(thislist)):
-        with open('section1-staff.key', 'rb') as file:
+        with open('section'+str(section)+'-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -92,10 +93,10 @@ def findpatient_info_byid(Patient_id):
         else:
             print("no patient record") 
 
-def findpatient_info_byname(Patient_Name):
+def findpatient_info_byname(Patient_Name,section):
     declist = []
     for i in range (len(thislist)):
-        with open('section1-staff.key', 'rb') as file:
+        with open('section'+str(section)+'-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -133,11 +134,11 @@ def findpatient_info_byname(Patient_Name):
         else:
             print("no patient record") 
 		
-def findall_nationality(Nationality):
+def findall_nationality(Nationality,section):
     templist = []
     declist = []
     for i in range (len(thislist)):
-        with open('section1-staff.key', 'rb') as file:
+        with open('section'+str(section)+'-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -157,11 +158,11 @@ def findall_nationality(Nationality):
         print(templist[i]["name"] + "------------>" + templist[i]["nationality"])
     return templist
 
-def findall_bloodtype(blood):
+def findall_bloodtype(blood,section):
     templist = []
     declist = []
     for i in range (len(thislist)):
-        with open('section1-staff.key', 'rb') as file:
+        with open('section'+str(section)+'-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -180,14 +181,14 @@ def findall_bloodtype(blood):
     print("There are ",No,"people.")
     print("test------------------------------",type(templist))
     for i in range(len(templist)):
-        print(templist[i]["name"] + "------------>" + templist[i]["blood"])
+        print(templist[i]["name"] + "------------>" + templist[i]["bloodtype"])
     return templist
 
-def findall_ageofpatients_below(real_age):
+def findall_ageofpatients_below(real_age,section):
     current_year = date.today().year
     declist = []
     for i in range (len(thislist)):
-        with open('section1-staff.key', 'rb') as file:
+        with open('section'+str(section)+'-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -195,7 +196,6 @@ def findall_ageofpatients_below(real_age):
         data = decdoc.decode('UTF-8')
         data = json.loads(data)
         declist.append(data)
-        print("test--------------------------:",len(declist))
     for i in range(len(declist)):
         dob = declist[i]["dob"]
         year = int(dob[6:])
@@ -207,14 +207,14 @@ def findall_ageofpatients_below(real_age):
             print(declist[i]["name"])
             print(declist[i]["dob"])
             print("Age =", age) 
-        else:
-            print("no one")
+        elif age > int (real_age):
+            pass
 
-def findall_height(height):
+def findall_height(height,section):
     templist = []
     declist = []
     for i in range (len(thislist)):
-        with open('section1-staff.key', 'rb') as file:
+        with open('section'+str(section)+'-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -236,11 +236,11 @@ def findall_height(height):
         print(templist[i]["name"] + "------------>" + templist[i]["height"] + 'cm')
     return templist
 
-def findall_weight(weight):
+def findall_weight(weight,section):
     templist = []
     declist = []
     for i in range (len(thislist)):
-        with open('section1-staff.key', 'rb') as file:
+        with open('section'+str(section)+'-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -262,23 +262,25 @@ def findall_weight(weight):
         print(templist[i]["name"] + "------------>" + templist[i]["weight"] + 'kg')
     return templist
 
-test = input("what do you want to know?")
-if (test == "patient_info"):
-    second = input("Search by name or ID:")
-    if (second == "ID"):
-        input = input("Patien's iD:")
-        findpatient_info_byid(input)
-    elif (second == "name"):
-        input = input("Patient's name:")
-        findpatient_info_byname(input)
-elif (test == "patient_nationality"):
-	patientnationality = input("Insert nationality:")
-	findall_nationality(patientnationality)
-elif (test == "patient_bloodtype"):
-	patientblood = input("Insert bloodtype:")
-	findall_bloodtype(patientblood)
-elif (test == "patient_age"):
-	patientage = input("Insert age:")
-	findall_ageofpatients_below(patientage)
-else:
-    print("The command does not exist, please try again")
+while(True):
+    index()
+    test = input("what do you want to know?")
+    if (test == "patient_info"):
+        second = input("Search by name or ID:")
+        if (second == "ID"):
+            input = input("Patien's iD:")
+            findpatient_info_byid(input)
+        elif (second == "name"):
+            input = input("Patient's name:")
+            findpatient_info_byname(input)
+    elif (test == "patient_nationality"):
+        patientnationality = input("Insert nationality:")
+        findall_nationality(patientnationality)
+    elif (test == "patient_bloodtype"):
+        patientblood = input("Insert bloodtype:")
+        findall_bloodtype(patientblood)
+    elif (test == "patient_age"):
+        patientage = input("Insert age:")
+        findall_ageofpatients_below(patientage)
+    else:
+        print("The command does not exist, please try again")

@@ -28,14 +28,9 @@ def index():
             admin_key = file.read()
         
         
-
         wanteddoc = findDoc.findDoc(admin_key,id,"admin") #find document in admin database
         if type(wanteddoc) != NoneType: #user is admin
-            #print(wanteddoc)
-            start = timeit.default_timer()
             decryptcheck = symcrytjson.decryptjson(admin_key, wanteddoc)
-            stop = timeit.default_timer()
-            print('Time: ', stop - start)
             id_check = decryptcheck["id"]
             #hash the password
             password_byte = str.encode(password)
@@ -67,16 +62,14 @@ def index():
             sa = 's' # staff
             
         if(sa == 's'): #if user is staff
-            print("test")
             decryptcheck = symcrytjson.decryptjson(key_selected, wanteddoc)
-            #print(decryptcheck)
             if not decryptcheck: #if cannot decrypt the document
                 print("Please re-login. Sorry for inconvenient")
                 index()
             id_check = decryptcheck["id"]
             #hash the password
             password_byte = str.encode(password)
-            hmac1 = hmac.new(key_selected, password_byte, digestmod=hashlib.sha256)
+            hmac1 = hmac.new(key_selected, password_byte, digestmod=hashlib.md5)
             #Create password MD from hmac1
             hashedpassword = hmac1.hexdigest() #hashed password from input
             print(hashedpassword)
@@ -86,7 +79,6 @@ def index():
             #print(id+" "+password)
 
         if(sa != "none" and id == id_check and hashedpassword == password_check): # authenticated
-            print("test1")
             if(sa == 's'):
                 decdoc = symcrytjson.decryptjson(key_selected,wanteddoc)
                 known_sec = decdoc['accessdb'] # accessdb            
