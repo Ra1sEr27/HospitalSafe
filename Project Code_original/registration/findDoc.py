@@ -15,9 +15,9 @@ def findDoc(key,id,db):
     mycol = mydb[db]
     id_byte = str.encode(id)
     #generate MAC from patient id
-    print("key: {}, id: {}".format(key,id_byte))
+    #print("key: {}, id: {}".format(key,id_byte))
     newhmac = hmac.new(key, id_byte, digestmod=hashlib.sha256)
     newmd = newhmac.hexdigest()
-    print("MD_id: ",newmd)
+    #print("MD_id: ",newmd)
     document = mycol.find_one({'MD_id': newmd}) #find the wanted document by MD_id
     return document

@@ -14,11 +14,17 @@ client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.
 db = client["Hospital"]   
 mycol = db["CTonly"]
 
-print(db.mycol.find())
-#for dbname in db:
-#    print(dbname)
-#db = couch["hospital_section1"]
-#thislist = []
+item_details = mycol.find()
+templist = []
+thislist = []
+no =0
+for item in item_details:
+    # This does not give a very readable output
+    templist.append(item)
+    thislist.append(templist[no]['CT'])
+    no = no +1
+print(thislist)
+print(len(thislist))
 #for item in db.view('onlyCT/CTview'):
     #thislist.append(item.key)
     #print(item.key)
@@ -30,13 +36,13 @@ print(db.mycol.find())
 #print("---------------------------------")
 #print(thislist[0])
 '''
-with open('section1_staff.key', 'rb') as file:
-   	key = file.read()
+with open('section1-staff.key', 'rb') as file:
+    key = file.read()
 testbyte = str.encode(thislist[0])
 fernet = Fernet(key)
 decdoc = fernet.decrypt(testbyte)
-#print(decdoc)
-#print(type(decdoc))
+print(decdoc)
+print(type(decdoc))
 
 data = decdoc.decode('UTF-8')
 #print(data)
@@ -45,10 +51,51 @@ data = json.loads(data)
 #print(data["name"])
 #print(type(data["name"]))   
 '''
-def findpatient_info(Patient_Name):
+def findpatient_info_byid(Patient_id):
     declist = []
     for i in range (len(thislist)):
-        with open('section1_staff.key', 'rb') as file:
+        with open('section1-staff.key', 'rb') as file:
+            key = file.read()
+        testbyte = str.encode(thislist[i])
+        fernet = Fernet(key)
+        decdoc = fernet.decrypt(testbyte)
+        data = decdoc.decode('UTF-8')
+        data = json.loads(data)
+        declist.append(data)
+        #print(decdoc)
+        #print(type(decdoc))
+        #print(decdoc.decode('UTF-8'))
+        #print("name1:", declist[0]["name"])
+        #print(len(declist))
+        #print("---------------------------------")
+        #print(declist)
+        #print("---------------------------------")
+    print("test:",len(declist))
+    for i in range(len(declist)):
+        if (declist[i]["id"] == str(Patient_id)):
+            print("ID: ", declist[i]["id"])
+            print("Name: ",declist[i]["name"])
+            print("Family member: ",declist[i]["Name of family member"])
+            print("Family member contact: ",declist[i]["Contact of family member"])
+            print("Date of birth: ",declist[i]["dob"])
+            print("Nationality: ",declist[i]["nationality"])
+            print("Height: ",declist[i]["height"]," cm")
+            print("Weight: ",declist[i]["weight"]," kg")
+            print("Bloodtype: ",declist[i]["bloodtype"])
+            print("Insurance Provider: ",declist[i]["Insurance Provider"])
+            print("Insurance ID: ",declist[i]["Insurance ID"])
+            print("Responsible Physician: ",declist[i]["Responsible Physician"])
+            print("Health-related behavior: ",declist[i]["Health-related behavior"])
+            print("Past medical records: ",declist[i]["Past medical records"])
+            print("Allergies: ",declist[i]["Allergies"])
+            break
+        else:
+            print("no patient record") 
+
+def findpatient_info_byname(Patient_Name):
+    declist = []
+    for i in range (len(thislist)):
+        with open('section1-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -67,14 +114,21 @@ def findpatient_info(Patient_Name):
     print("test:",len(declist))
     for i in range(len(declist)):
         if (declist[i]["name"] == str(Patient_Name)):
-            print(declist[i]["name"])
-            print(declist[i]["dob"])
-            print(declist[i]["RelativePhonenum"])
-            print(declist[i]["nationality"])
-            print(declist[i]["status"])
-            print(declist[i]["height"])
-            print(declist[i]["weight"])
-            print(declist[i]["bloodtype"])
+            print("ID: ", declist[i]["id"])
+            print("Name: ",declist[i]["name"])
+            print("Family member: ",declist[i]["Name of family member"])
+            print("Family member contact: ",declist[i]["Contact of family member"])
+            print("Date of birth: ",declist[i]["dob"])
+            print("Nationality: ",declist[i]["nationality"])
+            print("Height: ",declist[i]["height"]," cm")
+            print("Weight: ",declist[i]["weight"]," kg")
+            print("Bloodtype: ",declist[i]["bloodtype"])
+            print("Insurance Provider: ",declist[i]["Insurance Provider"])
+            print("Insurance ID: ",declist[i]["Insurance ID"])
+            print("Responsible Physician: ",declist[i]["Responsible Physician"])
+            print("Health-related behavior: ",declist[i]["Health-related behavior"])
+            print("Past medical records: ",declist[i]["Past medical records"])
+            print("Allergies: ",declist[i]["Allergies"])
             break
         else:
             print("no patient record") 
@@ -83,7 +137,7 @@ def findall_nationality(Nationality):
     templist = []
     declist = []
     for i in range (len(thislist)):
-        with open('section1_staff.key', 'rb') as file:
+        with open('section1-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -91,7 +145,6 @@ def findall_nationality(Nationality):
         data = decdoc.decode('UTF-8')
         data = json.loads(data)
         declist.append(data)
-        print("test--------------------------:",len(declist))
         #print(decdoc)
         #print(type(decdoc))
         #print(decdoc.decode('UTF-8'))
@@ -99,8 +152,7 @@ def findall_nationality(Nationality):
         if (declist[i]["nationality"] == Nationality):
             templist.append(declist[i])
     No = len(templist)
-    print("There are ",No,"people.")
-    print("test------------------------------",type(templist))
+    print("There are ",No,"people. ")
     for i in range(len(templist)):
         print(templist[i]["name"] + "------------>" + templist[i]["nationality"])
     return templist
@@ -109,7 +161,7 @@ def findall_bloodtype(blood):
     templist = []
     declist = []
     for i in range (len(thislist)):
-        with open('section1_staff.key', 'rb') as file:
+        with open('section1-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -135,7 +187,7 @@ def findall_ageofpatients_below(real_age):
     current_year = date.today().year
     declist = []
     for i in range (len(thislist)):
-        with open('section1_staff.key', 'rb') as file:
+        with open('section1-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -162,7 +214,7 @@ def findall_height(height):
     templist = []
     declist = []
     for i in range (len(thislist)):
-        with open('section1_staff.key', 'rb') as file:
+        with open('section1-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -188,7 +240,7 @@ def findall_weight(weight):
     templist = []
     declist = []
     for i in range (len(thislist)):
-        with open('section1_staff.key', 'rb') as file:
+        with open('section1-staff.key', 'rb') as file:
             key = file.read()
         testbyte = str.encode(thislist[i])
         fernet = Fernet(key)
@@ -212,8 +264,13 @@ def findall_weight(weight):
 
 test = input("what do you want to know?")
 if (test == "patient_info"):
-    patientname = input("Insert the name:")
-    findpatient_info(patientname)
+    second = input("Search by name or ID:")
+    if (second == "ID"):
+        input = input("Patien's iD:")
+        findpatient_info_byid(input)
+    elif (second == "name"):
+        input = input("Patient's name:")
+        findpatient_info_byname(input)
 elif (test == "patient_nationality"):
 	patientnationality = input("Insert nationality:")
 	findall_nationality(patientnationality)

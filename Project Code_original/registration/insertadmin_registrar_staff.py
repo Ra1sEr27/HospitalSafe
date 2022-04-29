@@ -20,14 +20,10 @@ import admin
 def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
     while(True):
         try:
+            # connect to the DB
             client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
-
             mydb = client["Hospital"]
             mycol = mydb[accessdb]
-            # connect to the DB
-            #couch = couchdb.Server('http://nontawat:non123@localhost:5984/')
-            
-            #db= couch[accessdb]
         except(couchdb.http.Unauthorized,couchdb.http.ResourceNotFound):
             print("Database is not existed")
         #print("---Type exit or back to go back to registrar---")
@@ -105,14 +101,16 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
                 while(len(staff_id_last4digits) != 4):
                     staff_id_last4digits = "0" + staff_id_last4digits
                 staff_id = "a" + "00" + staff_id_last4digits
-        #print(staff_id)
+        #hash the password
+        password_byte = str.encode(password)
+        hmac1 = hmac.new(key, password_byte, digestmod=hashlib.sha256)
+        #Create password MD from hmac1
+        hashedpassword = hmac1.hexdigest()
         # create a json format from input
         
-        doc = {"id": "{}".format(staff_id),"name": "{}".format(username), "password": "{}".format(password), "role": "{}".format(role), "accessdb": "{}".format(accessdb)}
+        doc = {"id": "{}".format(staff_id),"name": "{}".format(username), "password": "{}".format(hashedpassword), "role": "{}".format(role), "accessdb": "{}".format(accessdb)}
         doc_sorted = json.dumps(doc, indent=3)
-        doc_lite = {"id": "{}".format(staff_id),"name": "{}".format(username), "password": "", "role": "{}".format(role), "accessdb": "{}".format(accessdb)}
-        doc_lite_sorted = json.dumps(doc_lite, indent=3)
-        print("Document: \n{}".format(doc_lite_sorted))
+        print("Document: \n{}".format(doc_sorted))
         # Convert JSON to string
         doc = json.dumps(doc)
         #encrypt the document
@@ -200,7 +198,6 @@ def encryptjson(key,data_string,oldkey):
     # print("\n")
     # print("HMAC: ",hmac1)
     #print(hmac1)
-        
     return doc
     
 # with open('admin.key', 'rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key

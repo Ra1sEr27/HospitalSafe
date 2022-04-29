@@ -26,9 +26,8 @@ def encryptjson(key,data_string,oldkey):
     
     # create MAC from key and data
     mac = hmac.new(key, data_byte, hashlib.sha256).digest()
-    print("key: {}, id: {}".format(key,id_byte))
+    #print("key: {}, id: {}".format(key,id_byte))
     hmac1 = hmac.new(key, id_byte, digestmod=hashlib.sha256)
-
     #Create MD from hmac1
     md1 = hmac1.hexdigest()
 
