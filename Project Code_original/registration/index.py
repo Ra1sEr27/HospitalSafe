@@ -31,6 +31,7 @@ def index():
         
         wanteddoc = findDoc.findDoc(admin_key,id,"admin") #find document in admin database
         if type(wanteddoc) != NoneType: #user is admin
+            print("admin")
             decryptcheck = symcrytjson.decryptjson(admin_key, wanteddoc)
             id_check = decryptcheck["id"]
             #hash the password
@@ -89,7 +90,8 @@ def index():
             hashedpassword = hmac1.hexdigest() #hashed password from input
             #print(hashedpassword)
             password_check = decryptcheck["password"]
-            
+            print(hashedpassword)
+            print("key: ",key_selected)
             #print(id_check+" "+password_check)
             #print(id+" "+password)
             if hashedpassword != password_check: #The inputted passsword is not matched with the stored password

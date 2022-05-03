@@ -14,13 +14,17 @@ def keyrevocation(target_section):
     mydb = client['Hospital']
     with open('section{}-staff.key'.format(target_section),'rb') as file2:
         old_key = file2.read() #keep the old key for generating MD
+    staffcolnumlist = []
+    allcollist = mydb.list_collection_names()
+    for i in range(len(allcollist)):
+        if "staff" in allcollist[i]:
+            staffcolnumlist.append(allcollist[i][7])
     while(True):
-        #target_section = input("Enter the compromised section (0-3) : ")
         if target_section == "0":   #target section = admin section
             keygenerator.re_adminkeygenerator()
             db = mydb["admin"]
             break
-        elif target_section in ("1","2","3"):
+        elif target_section in staffcolnumlist:
             keygenerator.re_staffkeygenerator(target_section)
             staffcol = mydb["section{}-staff".format(target_section)]
             patientcol = mydb["section{}-patient".format(target_section)]
@@ -36,7 +40,7 @@ def keyrevocation(target_section):
     # rocovery from local and store it on cloud server. Open local folder according to leaked section
     
     # patient recover and encrypt
-    directory_patient = 'section{}_patient'.format(target_section)
+    directory_patient = 'section{}-patient'.format(target_section)
 
     for filename in os.listdir(directory_patient): #encrypt local patient's documents and upload to MongoDB
         f = os.path.join(directory_patient, filename)
@@ -56,8 +60,8 @@ def keyrevocation(target_section):
             #doc_string = json.dumps(data)
             #doc_sorted = json.dumps(local_file, indent = 3)
             
-            print("patient's data: ",data_string)
-            print("Used key: ",new_key)
+            print("Patient's data: ",data_string)
+            #print("Used key: ",new_key)
             doc_encrypted = symcrytjson.encryptjson(new_key,data_string,"") 
             #doc_encrypted_sorted = json.dumps(doc_encrypted, indent = 3)
             print("Re-encrypted the patient's documents")
@@ -66,7 +70,7 @@ def keyrevocation(target_section):
             
     
     # staff recover and encrypt
-    directory_staff = 'section{}_staff'.format(target_section)
+    directory_staff = 'section{}-staff'.format(target_section)
 
     for filename in os.listdir(directory_staff): #encrypt local staff's documents and upload to MongoDB
         fs = os.path.join(directory_staff, filename)

@@ -1,4 +1,5 @@
 
+from multiprocessing.sharedctypes import Value
 from cryptography.fernet import Fernet
 import onetimepad
 import getpass
@@ -22,15 +23,7 @@ def insertpatient(key,patientdb):
     if entername() == "back":
         registrar.registrar(key,patientdb[7])
     section_no = patientdb[7]
-    print(section_no)
-    if section_no == "1":
-        dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section1_patient'
-    elif section_no == "2":
-        dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section2_patient'
-    elif section_no == "3":
-        dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section3_patient'
-    else:
-        print("Invalid section")
+    dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section{}-patient'.format(section_no)
     
     patient_id_first2digits = str(section_no)
     while(len(patient_id_first2digits) != 2):
@@ -293,7 +286,12 @@ def enterDateofAdmission():
 def entervaccine():
     global vaccinelistJson
     vaccinelist = []
-    vaccineNum = int(input("Enter number of received vaccine: "))
+    while(True):
+        try:
+            vaccineNum = int(input("Enter number of received vaccine: "))
+            break
+        except(ValueError):
+            print("Invalid type of input")
     if vaccineNum == 'exit':
         exit()
     elif vaccineNum == 'back':

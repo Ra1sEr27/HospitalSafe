@@ -24,7 +24,6 @@ def registrar(key,section_no):
                         getalldoc.getalldoc(key, patientdb)
                     
                     #getalldoc.getalldoc_views(key, patientdb)
-
                 elif command1 == "insert":
                     insertpatient.insertpatient(key,patientdb)
                 elif command1 == "modify":

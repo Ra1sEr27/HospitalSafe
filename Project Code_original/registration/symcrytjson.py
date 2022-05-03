@@ -10,7 +10,7 @@ import hmac
 import binascii
 import keyrevocation
 def encryptjson(key,data_string,oldkey):
-    start = timeit.default_timer()
+    #start = timeit.default_timer()
     #convert string to JSON
     data_json = json.loads(data_string)
     #store name in name variable
@@ -40,8 +40,8 @@ def encryptjson(key,data_string,oldkey):
     # Upload ciphertext, MD and MAC to MongoDB
     doc = {'MD_id': '{}'.format(md1), 'CT': '{}'.format(
         encrypted), 'MAC': '{}'.format(mac)}
-    stop = timeit.default_timer()
-    print('Enc Time: ', stop - start)
+    #stop = timeit.default_timer()
+    #print('Enc Time: ', stop - start)
     return doc
 
 def decryptjson(key,doc):
