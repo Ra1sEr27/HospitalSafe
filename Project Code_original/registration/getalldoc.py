@@ -1,7 +1,7 @@
 from cryptography.fernet import Fernet
 import onetimepad
 import getpass
-import couchdb
+import hmac, hashlib
 import json
 import hashlib
 from pymongo import MongoClient
@@ -15,15 +15,16 @@ def getalldoc(key,db):
     mycol = mydb[db]
     #Get id from database
     for doc in mycol.find(): #find the wanted document by comparing MD
-        CT = doc['CT']
-        decdoc = symcrytjson.decryptjson(key,CT)
+        
+        decdoc = symcrytjson.decryptjson(key,doc)
         if not decdoc:  #if decryptjson returned False then terminate this function
             return False
+        id_byte = str.encode(decdoc["id"])
+        hmac1 = hmac.new(key, id_byte, digestmod=hashlib.sha256)
+        #Create MD from hmac1
+        md1 = hmac1.hexdigest()
         decdoc_sorted = json.dumps(decdoc,indent = 6)
-        if "password" in decdoc:
-            decdoc_lite = {"id": "{}".format(decdoc["id"]),"name": "{}".format(decdoc["name"]), "password": "", "role": "{}".format(decdoc["role"]), "accessdb": "{}".format(decdoc["accessdb"])}
-            decdoc_sorted = json.dumps(decdoc_lite,indent = 6)
-        
+        print("MD: ",md1)
         #if(decdoc_sorted['password'] != ''):
         #    decdoc['password'] = ''
         print("{}'s document: \n{}".format(decdoc["name"],decdoc_sorted))

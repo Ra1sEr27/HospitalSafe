@@ -26,9 +26,9 @@ def updatepatient(key,patientdb):
             if pid == "exit":
                 exit()
             elif pid == "back":
-                registrar.registrar(key,patientdb)
+                registrar.registrar(key,patientdb[7])
             wanteddoc = findDoc.findDoc(key,pid,patientdb)
-            if wanteddoc != "none": #if function findDoc found the document then break the while loop
+            if wanteddoc != "": #if function findDoc found the document then break the while loop
                 break
             else:
                 print("The wanted document is not found, please try again")
@@ -48,8 +48,7 @@ def updatepatient(key,patientdb):
                         break
                     else:
                         #apply new value to the selected attribute
-                        if edit_attr == "name":
-                            origName = decdoc["name"] 
+                        origName = decdoc["name"] 
                         decdoc[edit_attr] = new_val
 
                         #covert the edited document to string
@@ -76,10 +75,10 @@ def updatepatient(key,patientdb):
                                     patientcol.delete_one(wanteddoc)
                                     patientcol.insert_one(encrypted_edited_decdoc)
                                     #delete original local file name
-                                    f = open('./section{}_patient/{}_{}.json'.format(patientdb[16],pid,origName), 'w') #delete local file
+                                    f = open('./section{}-patient/{}_{}.json'.format(patientdb[7],pid,origName), 'w') #delete local file
                                     f.close()
                                     os.remove(f.name)
-                                    with open('./section{}_patient/{}_{}.json'.format(patientdb[16],pid,decdoc["name"]),'w') as file:
+                                    with open('./section{}-patient/{}_{}.json'.format(patientdb[7],pid,decdoc["name"]),'w') as file:
                                         file.write(edited_decdoc_string_sorted)
                                     print("The document has been saved to {}".format(patientcol.name))
                                 except(pymongo.http.ServerError):

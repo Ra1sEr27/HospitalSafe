@@ -10,12 +10,13 @@ import symcrytjson
 import os
 def deletestaff(key,staffdb,staffid):
     wanteddoc = findDoc.findDoc(key,staffid,staffdb)
-    if type(wanteddoc) != NoneType: #the document is existed
+    if type(wanteddoc) == NoneType: #the document is existed
         print("The document is not existed")
         return 0
     #decrypt the document
     decdoc = symcrytjson.decryptjson(key,wanteddoc)
-    
+
+
     decdoc_sorted = json.dumps(decdoc, indent = 6)
     print(decdoc_sorted)
 
@@ -26,7 +27,7 @@ def deletestaff(key,staffdb,staffid):
             mydb = client['Hospital'] #connect to db
             mycol = mydb[staffdb] #connect to collection
             mycol.delete_one(wanteddoc)
-            f = open('./section{}_patient/{}_{}.json'.format(staffdb[7],staffid,decdoc["name"]), 'w') #delete local file
+            f = open('./section{}-patient/{}_{}.json'.format(staffdb[7],staffid,decdoc["name"]), 'w') #delete local file
             f.close()
             os.remove(f.name)
             print("{}'s document has been deleted".format(staffid))

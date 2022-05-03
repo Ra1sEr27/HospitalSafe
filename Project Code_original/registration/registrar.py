@@ -9,21 +9,12 @@ import deletestaff
 import updatestaff
 import getalldoc
 import findDoc
-def registrar(key,accessdb):
-    if accessdb in ("db1","section1-patient","section1-staff"):
-        patientdb = "section1-patient"
-        staffdb = "section1-staff"
-    elif accessdb in ("db2","section-patient2","section2-staff"):
-        patientdb = "section2-patient"
-        staffdb = "section2-staff"
-    elif accessdb in ("db3","section-patient3","section3-staff"):
-        patientdb = "section3-patient"
-        staffdb = "section3-staff"
-    else:
-        print("Database {} is not existed".format(accessdb))
-        return False
+def registrar(key,section_no):
+    patientdb = "section{}-patient".format(section_no)
+    staffdb = "section{}-staff".format(section_no)
+
     while(True):
-        type = input("Which types of document do you want to view/insert/modify? (medical staff,patient,logout): ")
+        type = input("Which types of document do you want to view/insert/modify? (medical staff,patient,exit): ")
         if type == "patient":
             while(True):
                 command1 = input("Which tasks do you want to do? (view,insert,modify,back): ")
@@ -55,7 +46,7 @@ def registrar(key,accessdb):
                 command1 = input("Which tasks do you want to do? (view,insert,modify,back): ")
                 
                 if command1 == "view":
-                    getalldoc.getalldoc(key, accessdb)
+                    getalldoc.getalldoc(key, staffdb)
                 elif command1 == "insert":
                     insertadmin_registrar_staff.insertadmin_registrar_staff(key,staffdb,"registrar","medical staff")
                 elif command1 == "modify":
@@ -66,24 +57,20 @@ def registrar(key,accessdb):
                         elif sid == "exit":
                             exit()
                         else:
-                            wanteddoc = findDoc.findDoc(key,sid,staffdb)
-                            if type(wanteddoc) == NoneType: #if function findDoc found the document then break the while loop
-                                print("The document does not existed")
-                            elif type(wanteddoc) != NoneType:
-                                command = input("What do you want to do with this document? (update,delete,back): ")
-                                if command =="update":
-                                    updatestaff.updatestaff(key,staffdb,sid)
-                                elif command =="delete":
-                                    deletestaff.deletestaff(key,staffdb,sid)
-                                elif command =="back": # exit the if-statement
-                                    break
-                                else:
-                                    print("Invalid command")
+                            command = input("What do you want to do with this document? (update,delete,back): ")
+                            if command =="update":
+                                updatestaff.updatestaff(key,staffdb,sid)
+                            elif command =="delete":
+                                deletestaff.deletestaff(key,staffdb,sid)
+                            elif command =="back": # exit the if-statement
+                                break
+                            else:
+                                print("Invalid command")
                 elif command1 == "back":
                     break
                 else:
                     print("Invalid command")
-        elif type == "logout":
+        elif type == "exit":
             break
         else:
             print("Invalid type, please try again")

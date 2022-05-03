@@ -20,8 +20,7 @@ def insertpatient(key,patientdb):
     except(couchdb.http.Unauthorized):
         print("Invalid username or password")
     if entername() == "back":
-        registrar.registrar(key,patientdb)
-    #print(patientdb)
+        registrar.registrar(key,patientdb[7])
     section_no = patientdb[7]
     print(section_no)
     if section_no == "1":
@@ -57,7 +56,7 @@ def insertpatient(key,patientdb):
     doc = {"id":"{}".format(patient_id),
         "name":"{}".format(name),
         "National ID":"{}".format(NationalID),
-        "Addres of residence":"{}".format(address),
+        "Address of residence":"{}".format(address),
         "Phonenum":"{}".format(Phonenum),
         "Email":"{}".format(email),
         "Name of family member":"{}".format(fam_name),
@@ -73,46 +72,21 @@ def insertpatient(key,patientdb):
         "Health-related behavior":"{}".format(health_relate),
         "Past medical records":"{}".format(Past_med),
         "Family history":"{}".format(fam_hist),
-        "Allergies":"{}".format(allergies)}
-
-    doc_views = {"id":"{}".format(patient_id),
-        "name":"{}".format(name),
-        "Phonenum":"{}".format(Phonenum),
-        "Name of family member":"{}".format(fam_name),
-        "Contact of family member":"{}".format(fam_contact),
-        "dob":"{}".format(dob),
-        "nationality":"{}".format(nationality),
-        "height": "{}".format(height),
-        "weight":"{}".format(weight),
-        "bloodtype":"{}".format(bloodtype),
-        "Insurance Provider":"{}".format(insurance_prov),
-        "Insurance ID":"{}".format(insurance_ID),
-        "Responsible Physician":"{}".format(doctor),
-        "Health-related behavior":"{}".format(health_relate),
-        "Past medical records":"{}".format(Past_med),
-        "Family history":"{}".format(fam_hist),
-        "Allergies":"{}".format(allergies)}
+        "Allergies":"{}".format(allergies),
+        "Data of addmission":"{}".format(datead),
+        "Vaccination":"{}".format(vaccinelistJson),
+        "Room":"{}".format(room)
+        }
     
     #covert JSON to string
     doc_string = json.dumps(doc)
     doc_sorted = json.dumps(doc, indent = 3)
     print("Document: \n", doc_sorted)
-    
-    # # docs for views
-    # doc_string_views = json.dumps(doc_views)
-    # doc_sorted_views = json.dumps(doc_views, indent = 3)
-    # print("ViewDocument: \n", doc_sorted_views)
 
     #encrypt the document
     doc_encrypted = symcrytjson.encryptjson(key,doc_string,"") 
     doc_encrypted_sorted = json.dumps(doc_encrypted, indent = 3)
     
-    
-    # docs for views
-    # doc_encrypted_views = symcrytjson.encryptjson(key,doc_string_views) 
-    # doc_encrypted_sorted_views = json.dumps(doc_encrypted_views, indent = 3)
-    
-    #print("Encrypted view document: \n", doc_encrypted_sorted_views)
     print("Encrypted document: \n", doc_encrypted_sorted)
     
     while(True):
@@ -123,7 +97,7 @@ def insertpatient(key,patientdb):
                 id = mycol.insert_one(doc_encrypted)
                 print("The document has been saved to {} (id: {}).".format(patientdb,id.inserted_id))
                 #save to local storage
-                with open('./section{}_patient/{}_{}.json'.format(section_no,patient_id,name),'w') as file:
+                with open('./section{}-patient/{}_{}.json'.format(section_no,patient_id,name),'w') as file:
                     file.write(doc_sorted)
                 
             except(couchdb.http.ServerError):
@@ -305,4 +279,36 @@ def enterAllergy():
         exit()
     elif allergies == "back":
         enterFamHistory()
-        
+    enterDateofAdmission()   
+
+def enterDateofAdmission():
+    global datead
+    datead = input("Date of admission: ")
+    if datead == 'exit':
+        exit()
+    elif datead == 'back':
+        enterAllergy()
+    entervaccine()
+
+def entervaccine():
+    global vaccinelistJson
+    vaccinelist = []
+    vaccineNum = int(input("Enter number of received vaccine: "))
+    if vaccineNum == 'exit':
+        exit()
+    elif vaccineNum == 'back':
+        enterAllergy()
+    for i in range(vaccineNum):
+        vaccinename = input("Enter vaccine name ({}): ".format(i+1))
+        vaccinelist.append("Received vaccine({})".format(i+1))
+        vaccinelist.append(vaccinename)
+    vaccinelistJson = {vaccinelist[i]: vaccinelist[i + 1] for i in range(0, len(vaccinelist), 2)}
+    enterRoom()
+
+def enterRoom():
+    global room
+    room = input("Room: ")
+    if room == 'exit':
+        exit()
+    elif room == 'back':
+        entervaccine()

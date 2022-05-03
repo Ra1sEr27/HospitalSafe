@@ -1,7 +1,7 @@
 from cryptography.fernet import Fernet
 
-def keygenerator(): #For generating the key for a new section
-    section_no = input("Enter the section number : ")
+def keygenerator(section_no): #For generating the key for a new section
+    #section_no = input("Enter the section number : ")
     key = Fernet.generate_key()
     with open('section{}-staff.key'.format(section_no),'wb') as file:
         file.write(key)

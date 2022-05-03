@@ -1,3 +1,4 @@
+from types import NoneType
 from cryptography.fernet import Fernet
 import onetimepad
 import getpass
@@ -17,10 +18,12 @@ def deletepatient(key,patientdb):
                 exit()
             elif pid == "back":
                 break
+
+            if pid[2] != patientdb[7]:
+                print("You don't have permission to access section {}".format(pid[2]))
             #find the document
             wanteddoc = findDoc.findDoc(key,pid,patientdb)
-            wanteddoc_views = findDoc.findDoc(key,pid,patientdb+'_views')
-            if wanteddoc != "none":
+            if type(wanteddoc) != NoneType:
                 #decrypt the document
                 decdoc = symcrytjson.decryptjson(key,wanteddoc)
                 
@@ -36,7 +39,7 @@ def deletepatient(key,patientdb):
                         mycol.delete_one(wanteddoc)
                         
                         #delete local document
-                        f = open('./section{}_patient/{}_{}.json'.format(patientdb[16],pid,decdoc["name"]), 'w') #delete local file
+                        f = open('./section{}-patient/{}_{}.json'.format(patientdb[7],pid,decdoc["name"]), 'w') #delete local file
                         f.close()
                         os.remove(f.name)
                         print("{}'s document has been deleted".format(pid))
@@ -47,4 +50,6 @@ def deletepatient(key,patientdb):
                         exit()
                     else:
                         print("Invalid input, please try again")
+            else:
+                ("Invalid patient's ID")
 

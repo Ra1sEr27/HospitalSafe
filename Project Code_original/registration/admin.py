@@ -7,8 +7,10 @@ import updateregistrar, deleteregistrar
 import create, drop
 import getalldoc
 import findDoc
-import couchdb
+
 def admin(key,adminid):
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
+    mydb = client["Hospital"]
     while(True):
         sqlcommand = input("Which type SQL commands do you want to use? (DDL,DML,back) : ")
         sqlcommand = sqlcommand.lower()
@@ -55,23 +57,25 @@ def admin(key,adminid):
                     while(True):
                         command1 = input("Which tasks do you want to do? (view,insert,modify,back): ")
                         if command1 in ("view","insert", "modify"):
-                            if command1 != "insert":
+                            if command1 not in ("insert","view"):
                                 while(True): #get registrar ID and section no.
                                     rid = input("Enter registrar's ID: ")
-                                    if section_no == "back":
-                                        break
-                                    elif section_no == "exit":
-                                        exit()
-                                    wanteddoc = findDoc.findDoc(key,rid,staffdb)
-                                    if type(wanteddoc) == NoneType: #if function findDoc found the document then break the while loop
-                                        print("The document does not existed")
-                                    else: #found the document
-                                        break
                                     section_no = rid[2]
-                            elif command1 == "insert":
-                                client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
-                                mydb = client["Hospital"]
-                                
+                                    if rid== "back":
+                                        break
+                                    elif rid == "exit":
+                                        exit()
+                                    staffdb = "section{}-staff".format(rid[2])
+                                    with open('{}.key'.format(staffdb),'rb') as file: #open key for that section
+                                        key = file.read()
+                                    wanteddoc = findDoc.findDoc(key,rid,staffdb)
+                                    
+                                    if wanteddoc != NoneType: #if function findDoc found the document then break the while loop
+                                        break
+                                    else: #found the document
+                                        print("The document does not existed")
+                            elif command1 in ("insert","view"):
+                                #get the available section
                                 staffcolnumlist = []
                                 allcollist = mydb.list_collection_names()
                                 for i in range(len(allcollist)):
@@ -82,7 +86,7 @@ def admin(key,adminid):
                                     sorted_staffcolnumlist.append(int(staffcolnumlist[i]))
                                 sorted_staffcolnumlist.sort()
                                 while(True): #check inputted section no.
-                                    section_no = input("Enter section number {}: ".format(sorted_staffcolnumlist))
+                                    section_no = input("Enter section number {}: ".format(sorted_staffcolnumlist)) #ask for section number
                                     if section_no in staffcolnumlist:
                                         break
                                     elif section_no == "back":
@@ -91,7 +95,7 @@ def admin(key,adminid):
                                         exit()
                                     else:
                                         print("Invalid section, please try again")
-                            
+                    
                             staffdb = "section{}-staff".format(section_no)
                             with open('section{}-staff.key'.format(section_no),'rb') as file: #open key for that section
                                 key = file.read()
@@ -99,15 +103,17 @@ def admin(key,adminid):
                             if command1 == "insert":
                                 insertadmin_registrar_staff.insertadmin_registrar_staff(key,staffdb,"admin","registrar")
                             elif command1 == "view":
+                                
                                 result = getalldoc.getalldoc(key,"section{}-staff".format(section_no))
                                 if not result:
                                     print("The database has been formatted, due to key leaking")
                             elif command1 == "modify":
                                 command = input("What do you want to do with this document? (update,delete,back): ")
                                 if command =="update":
-                                    updateregistrar.updateregistrar(key,rid)
+                                    print("rid:",rid)
+                                    updateregistrar.updateregistrar(key,wanteddoc)
                                 elif command =="delete":
-                                    deleteregistrar.deleteregistrar(key,rid)
+                                    deleteregistrar.deleteregistrar(key,wanteddoc)
                                 elif command =="back": # exit the if-statement
                                     break
                                 else:

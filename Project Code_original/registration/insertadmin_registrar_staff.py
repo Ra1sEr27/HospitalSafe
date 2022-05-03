@@ -52,14 +52,19 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
         #generate last 4 digit of id
         
         if accessdb != "admin": #generate staff id
-            
+            staffcolnumlist = []
+            allcollist = mydb.list_collection_names()
+            for i in range(len(allcollist)):
+                if "staff" in allcollist[i]:
+                    staffcolnumlist.append(allcollist[i][7])
+            sorted_staffcolnumlist = []
+            for i in range(len(staffcolnumlist)):
+                sorted_staffcolnumlist.append(int(staffcolnumlist[i]))
+            sorted_staffcolnumlist.sort()
             section_no = accessdb[7]
-            if section_no == "1":
-                dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section1_staff'
-            elif section_no == "2":
-                dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section2_staff'
-            elif section_no == "3":
-                dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section3_staff'
+            section_no_int = int(section_no)
+            if section_no_int in sorted_staffcolnumlist:
+                dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\registration\section{}-staff'.format(section_no)
             else:
                 print("Invalid section")
             
@@ -126,12 +131,11 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
                     with open('./admin/{}_{}.json'.format(staff_id,username),'w') as file:
                         file.write(doc_sorted)
                 elif staff_id[0] in ("r","m"): #save to staff folder
-                    with open('./section{}_staff/{}_{}.json'.format(section_no,staff_id,username),'w') as file:
+                    with open('./section{}-staff/{}_{}.json'.format(section_no,staff_id,username),'w') as file:
                         file.write(doc_sorted)
-
                 x = mycol.insert_one(doc_encrypted)
                 print("The document has been saved to {} (id: {}).".format(accessdb,x.inserted_id))
-            except(couchdb.http.ServerError):
+            except(pymongo.errors.ServerSelectionTimeoutError, AttributeError):
                 print("Cannot save the document")
         elif confirm == "n":
             break
@@ -143,8 +147,8 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
             print("Invalid command, please try again")
 
 def encryptjson(key,data_string,oldkey):
-    start = timeit.default_timer()
-    print("Used key: ",key)
+    #start = timeit.default_timer()
+    #print("Used key: ",key)
     #convert string to JSON
     data_json = json.loads(data_string)
     #store name in name variable
@@ -159,9 +163,9 @@ def encryptjson(key,data_string,oldkey):
     encrypted = fernet.encrypt(data_byte)
     
     # create MAC from key and data
-    mac = hmac.new(key, data_byte, hashlib.md5).digest()
+    mac = hmac.new(key, data_byte, hashlib.sha256).digest()
     #print("key: {}, id: {}".format(key,id_byte))
-    hmac1 = hmac.new(key, id_byte, digestmod=hashlib.md5)
+    hmac1 = hmac.new(key, id_byte, digestmod=hashlib.sha256)
     #Create MD from hmac1
     md1 = hmac1.hexdigest()
 
@@ -175,8 +179,8 @@ def encryptjson(key,data_string,oldkey):
     doc = {'MD_id': '{}'.format(md1), 'CT': '{}'.format(
         encrypted), 'MAC': '{}'.format(mac)}
     doc_string = json.dumps(doc)
-    stop = timeit.default_timer()
-    print('Enc Time: ', stop - start)
+    #stop = timeit.default_timer()
+    #print('Enc Time: ', stop - start)
     return doc
     
 # with open('admin.key', 'rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key

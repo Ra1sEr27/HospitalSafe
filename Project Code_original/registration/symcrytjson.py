@@ -45,10 +45,14 @@ def encryptjson(key,data_string,oldkey):
     return doc
 
 def decryptjson(key,doc):
-    start = timeit.default_timer()
+    #start = timeit.default_timer()
     #store the stored ciphertext in CT
     #print(doc)
-    CT = doc['CT']
+    try:
+        CT = doc['CT']
+    except(TypeError):
+        print("Cannot find the document")
+        return False
     #store the original MAC to origmac
     origmac = doc['MAC']
     #convert string to byte
@@ -83,7 +87,7 @@ def decryptjson(key,doc):
     #convert string to json format
     decdoc = json.loads(decdoc)
     
-    stop = timeit.default_timer()
-    print('Dec Time: ', stop - start)
+    #stop = timeit.default_timer()
+    #print('Dec Time: ', stop - start)
     return decdoc
     
