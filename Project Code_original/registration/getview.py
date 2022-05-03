@@ -163,7 +163,7 @@ def findall_nationality(Nationality,section):
     No = len(templist)
     print("There are ",No,"people. ")
     for i in range(len(templist)):
-        print(templist[i]["name"] + "------------>" + templist[i]["nationality"])
+        print(templist[i]["name"] + ": " + templist[i]["nationality"])
     return templist
 
 def findall_bloodtype(blood,section):
@@ -178,7 +178,7 @@ def findall_bloodtype(blood,section):
         data = decdoc.decode('UTF-8')
         data = json.loads(data)
         declist.append(data)
-        print("test--------------------------:",len(declist))
+        #print("test--------------------------:",len(declist))
         #print(decdoc)
         #print(type(decdoc))
         #print(decdoc.decode('UTF-8'))
@@ -187,9 +187,9 @@ def findall_bloodtype(blood,section):
             templist.append(declist[i])
     No = len(templist)
     print("There are ",No,"people.")
-    print("test------------------------------",type(templist))
+    #print("test------------------------------",type(templist))
     for i in range(len(templist)):
-        print(templist[i]["name"] + "------------>" + templist[i]["bloodtype"])
+        print(templist[i]["name"] + ": " + templist[i]["bloodtype"])
     return templist
 
 def findall_ageofpatients_below(real_age,section):
@@ -213,13 +213,13 @@ def findall_ageofpatients_below(real_age,section):
         #print("year",year)
         #print("age:",age)
         if age <= int(real_age):
-            print(declist[i]["name"])
-            print(declist[i]["dob"])
-            print("Age =", age) 
+            print("Name: ",declist[i]["name"])
+            print("Date of birth: ",declist[i]["dob"])
+            print("Age: ",age) 
             count = count +1
         elif age > int (real_age):
             pass
-    print('There are' +count+' people')
+    print('There are ' +str(count)+' people')
 
 def find_room(roomNo,section):
     templist = []
@@ -294,7 +294,7 @@ def findall_weight(weight,section):
         data = decdoc.decode('UTF-8')
         data = json.loads(data)
         declist.append(data)
-        print("test--------------------------:",len(declist))
+        #print("test--------------------------:",len(declist))
         #print(decdoc)
         #print(type(decdoc))
         #print(decdoc.decode('UTF-8'))
@@ -303,9 +303,9 @@ def findall_weight(weight,section):
             templist.append(declist[i])
     No = len(templist)
     print("There are ",No,"people.")
-    print("test------------------------------",type(templist))
+    #print("test------------------------------",type(templist))
     for i in range(len(templist)):
-        print(templist[i]["name"] + "------------>" + templist[i]["weight"] + 'kg')
+        print(templist[i]["name"] + ": " + templist[i]["weight"] + 'kg')
     return templist
 
     
@@ -326,7 +326,7 @@ def getview(section):
         no = no +1
 
     while(True):
-        test = input("Which type of patient data you want to know? (information, nationality, bloodtype, age, room): ")
+        test = input("Which type of patient data you want to know? (information, nationality, bloodtype, age, room, back, exit): ")
         test.lower()
         #print(section)
         #print(type(section))

@@ -27,7 +27,7 @@ def deletestaff(key,staffdb,staffid):
             mydb = client['Hospital'] #connect to db
             mycol = mydb[staffdb] #connect to collection
             mycol.delete_one(wanteddoc)
-            f = open('./section{}-patient/{}_{}.json'.format(staffdb[7],staffid,decdoc["name"]), 'w') #delete local file
+            f = open('./section{}-staff/{}_{}.json'.format(staffdb[7],staffid,decdoc["name"]), 'w') #delete local file
             f.close()
             os.remove(f.name)
             print("{}'s document has been deleted".format(staffid))
