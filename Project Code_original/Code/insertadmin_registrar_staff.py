@@ -20,7 +20,7 @@ import admin
 def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
     while(True):
         try:
-            # connect to the DB
+            # connect to the MongoDB
             client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
             mydb = client["Hospital"]
             mycol = mydb[accessdb]
