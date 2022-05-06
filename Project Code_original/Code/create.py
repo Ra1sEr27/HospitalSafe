@@ -39,8 +39,8 @@ def create():
         x = mycol.delete_one(mydict)  #delete doc
         print("Database {} has been created".format(patientcol))
         directory = patientcol
-        path_dir = "C:/Users/exia4/OneDrive/Desktop/SIIT/Third Year/Second Semester/Network Security/Project/Security-and-Cloud-Project/Project Code_original/Code/"
-        if not os.path.exists(directory):
+        path_dir = os.path.abspath('.') #get current folder directory
+        if not os.path.exists(directory): #create folder to path_dir
             os.mkdir(os.path.join(path_dir, directory))
 
         staffcol = "section{}-staff".format(picknum)
@@ -50,8 +50,8 @@ def create():
         x = mycol.delete_one(mydict)  #delete doc
         print("Database {} has been created".format(staffcol))
         directory = staffcol
-        path_dir = "C:/Users/exia4/OneDrive/Desktop/SIIT/Third Year/Second Semester/Network Security/Project/Security-and-Cloud-Project/Project Code_original/Code/"
-        if not os.path.exists(directory):
+        path_dir = os.path.abspath('.') #get current folder directory
+        if not os.path.exists(directory): #create folder to path_dir
             os.mkdir(os.path.join(path_dir, directory))
         
         keygenerator.keygenerator(picknum)

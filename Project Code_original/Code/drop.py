@@ -1,7 +1,7 @@
 from cryptography.fernet import Fernet
 from pymongo import MongoClient
 import pymongo
-import os
+import os, shutil
 def drop():
     #code for testing
 
@@ -30,14 +30,37 @@ def drop():
                 confirm = input("Do you want to delete {} collection? (y/n/exit): ".format(colname))
                 if confirm == "y":
                     mycol = mydb[patientcol]
-                    mycol.drop()
-                    directory = patientcol
+                    mycol.drop() #drop collection in MongoDB
+                    foldername = patientcol
+                    directory = os.path.abspath('.')
+                    patientfolder_dir = os.path.join(directory, foldername)
+                    print(patientfolder_dir)
+                    for filename in os.listdir(patientfolder_dir): #empty the patient's folder
+                        file_path = os.path.join(patientfolder_dir, filename)
+                        try:
+                            if os.path.isfile(file_path) or os.path.islink(file_path):
+                                os.unlink(file_path)
+                            elif os.path.isdir(file_path):
+                                shutil.rmtree(file_path)
+                        except Exception as e:
+                            print('Failed to delete %s. Reason: %s' % (file_path, e))
                     path_dir = "C:/Users/exia4/OneDrive/Desktop/SIIT/Third Year/Second Semester/Network Security/Project/Security-and-Cloud-Project/Project Code_original/Code/"
-                    if os.path.exists(directory):
+                    if os.path.exists(directory): #remove folder
                         os.rmdir(os.path.join(path_dir, directory))
                     mycol = mydb[staffcol]
                     mycol.drop()
-                    directory = staffcol
+                    foldername = staffcol
+                    directory = os.path.abspath('.')
+                    stafffolder_dir = os.path.join(directory, foldername)
+                    for filename in os.listdir(stafffolder_dir): #empty the staff's folder
+                        file_path = os.path.join(stafffolder_dir, filename)
+                        try:
+                            if os.path.isfile(file_path) or os.path.islink(file_path):
+                                os.unlink(file_path)
+                            elif os.path.isdir(file_path):
+                                shutil.rmtree(file_path)
+                        except Exception as e:
+                            print('Failed to delete %s. Reason: %s' % (file_path, e))
                     path_dir = "C:/Users/exia4/OneDrive/Desktop/SIIT/Third Year/Second Semester/Network Security/Project/Security-and-Cloud-Project/Project Code_original/Code/"
                     if os.path.exists(directory):
                         os.rmdir(os.path.join(path_dir, directory))
