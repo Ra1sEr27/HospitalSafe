@@ -6,7 +6,7 @@ import pymongo
 
 import keygenerator
 def create():
-    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
     mydb = client["Hospital"]
     #get amount of collections
     staffcolnumlist = []

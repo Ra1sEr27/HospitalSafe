@@ -16,7 +16,7 @@ import getpass
 
 
 def updateadmin(key,adminid):
-    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
     db = client["Hospital"]   
     admincol = db["admin"]
     wanteddoc = findDoc.findDoc(key,adminid,"admin")

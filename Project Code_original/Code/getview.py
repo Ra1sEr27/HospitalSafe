@@ -11,7 +11,7 @@ import pymongo
 import timeit
 
 import getpass
-client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
+client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
 db = client["Hospital"]   
 mycol = db["CTonly"]
 
@@ -248,7 +248,7 @@ def findall_weight(weight,section):
 
     
 def getview(section):
-    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
     db = client["Hospital"]   
     mycol = db["CTonly"+str(section)]
 

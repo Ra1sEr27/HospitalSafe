@@ -9,7 +9,7 @@ import getalldoc
 import findDoc
 
 def admin(key,adminid):
-    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
     mydb = client["Hospital"]
     while(True):
         sqlcommand = input("Which type SQL commands do you want to use? (DDL,DML,back) : ")

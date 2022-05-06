@@ -22,7 +22,7 @@ def deleteadmin(key,adminid):
         while(True):
             ans = input("Do you want to delete this document? (y/n/exit): ")
             if ans =='y':
-                client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
+                client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
                 mydb = client['Hospital'] #connect to db
                 mycol = mydb['admin']
                 mycol.delete_one(wanteddoc)

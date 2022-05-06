@@ -15,7 +15,7 @@ import pymongo
 
 
 def updatepatient(key,patientdb):
-    client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
+    client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
     db = client['Hospital']
     patientcol = db[patientdb]
     #Enter patient name

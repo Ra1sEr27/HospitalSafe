@@ -91,7 +91,7 @@ def updatestaff(key,staffdb,staffid):
                         confirm = input("Do you want to save the above encrypted document? (y/n/exit): ")
                         if confirm == "y":
                             try:
-                                client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
+                                client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
                                 db = client['Hospital'] #connect to db
                                 staffcol = db[staffdb]
                                 staffcol.delete_one(wanteddoc)
