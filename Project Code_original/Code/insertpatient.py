@@ -23,7 +23,8 @@ def insertpatient(key,patientdb):
     if entername() == "back":
         registrar.registrar(key,patientdb[7])
     section_no = patientdb[7]
-    dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\Code\section{}-patient'.format(section_no)
+    directory = os.path.abspath('.') #get current directory of the folder
+    dir_path = os.path.join(directory, "section{}-patient".format(section_no)) #open this dir to count files
     
     patient_id_first2digits = str(section_no)
     while(len(patient_id_first2digits) != 2):

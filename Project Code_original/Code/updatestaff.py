@@ -83,8 +83,6 @@ def updatestaff(key,staffdb,staffid):
                     encrypted_edited_decdoc_sorted = json.dumps(encrypted_edited_decdoc, indent = 6)
 
                     #print the results
-                    
-                    #edited_doc_lite = {"name": "{}".format(decdoc["name"]), "password": "{}".format(decdoc["password"]), "role": "{}".format(decdoc["role"]), "accessdb": "{}".format(decdoc["accessdb"])}
                     print("Edited {}'s document: \n{}".format(staffid,edited_decdoc_string_sorted))
                     print("Encrypted edited {}'s document: \n{}".format(staffid,encrypted_edited_decdoc_sorted))
 
@@ -123,7 +121,3 @@ def updatestaff(key,staffdb,staffid):
                 exit()
             else:
                 print("Invalid attribute, please try again")
-    
-
-#test the function
-#updatestaff("hospital_section1")

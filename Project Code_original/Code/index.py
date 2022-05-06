@@ -121,8 +121,6 @@ def index():
 
             role = decryptcheck['role']
             if(role == "admin"):
-                #with open('admin.key','rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key
-                #    admin_key = file.read()
                 print("---Welcome to admin section---")
                 admin.admin(admin_key,id)
                 

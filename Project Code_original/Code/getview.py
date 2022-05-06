@@ -14,13 +14,7 @@ import getpass
 client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
 db = client["Hospital"]   
 mycol = db["CTonly"]
-'''
-db.createView(
-   "managementFeedback",
-   "survey",
-   [ { $project: { "management": "$feedback.management", department: 1 } } ]
-)
-'''
+
 item_details = mycol.find()
 templist = []
 thislist = []
@@ -30,34 +24,7 @@ for item in item_details:
     templist.append(item)
     thislist.append(templist[no]['CT'])
     no = no +1
-#print(thislist)
-#print(len(thislist))
-#for item in db.view('onlyCT/CTview'):
-    #thislist.append(item.key)
-    #print(item.key)
-    #print(type(item.key))
-#print(thislist)
-#print(len(thislist))
-#print("this1:",thislist[0])
-#print("this2:",thislist[1])
-#print("---------------------------------")
-#print(thislist[0])
-'''
-with open('section1-staff.key', 'rb') as file:
-    key = file.read()
-testbyte = str.encode(thislist[0])
-fernet = Fernet(key)
-decdoc = fernet.decrypt(testbyte)
-print(decdoc)
-print(type(decdoc))
 
-data = decdoc.decode('UTF-8')
-#print(data)
-data = json.loads(data)
-#print(type(data))
-#print(data["name"])
-#print(type(data["name"]))   
-'''
 def findpatient_info_byid(Patient_id,section):
     declist = []
     for i in range (len(thislist)):
@@ -69,14 +36,7 @@ def findpatient_info_byid(Patient_id,section):
         data = decdoc.decode('UTF-8')
         data = json.loads(data)
         declist.append(data)
-        #print(decdoc)
-        #print(type(decdoc))
-        #print(decdoc.decode('UTF-8'))
-        #print("name1:", declist[0]["name"])
-        #print(len(declist))
-        #print("---------------------------------")
-        #print(declist)
-        #print("---------------------------------")
+
     for i in range(len(declist)):
         if (declist[i]["id"] == str(Patient_id)):
             print("ID: ", declist[i]["id"])
@@ -110,15 +70,7 @@ def findpatient_info_byname(Patient_Name,section):
         data = decdoc.decode('UTF-8')
         data = json.loads(data)
         declist.append(data)
-        #print(decdoc)
-        #print(type(decdoc))
-        #print(decdoc.decode('UTF-8'))
-        #print("name1:", declist[0]["name"])
-        #print(len(declist))
-        #print("---------------------------------")
-        #print(declist)
-        #print("---------------------------------")
-    #print(declist)
+
     for i in range(len(declist)):
         if (declist[i]["name"] == str(Patient_Name)):
             print("ID: ", declist[i]["id"])
@@ -154,9 +106,7 @@ def findall_nationality(Nationality,section):
         data = decdoc.decode('UTF-8')
         data = json.loads(data)
         declist.append(data)
-        #print(decdoc)
-        #print(type(decdoc))
-        #print(decdoc.decode('UTF-8'))
+
     for i in range(len(declist)):
         if (declist[i]["nationality"] == Nationality):
             templist.append(declist[i])
@@ -178,16 +128,13 @@ def findall_bloodtype(blood,section):
         data = decdoc.decode('UTF-8')
         data = json.loads(data)
         declist.append(data)
-        #print("test--------------------------:",len(declist))
-        #print(decdoc)
-        #print(type(decdoc))
-        #print(decdoc.decode('UTF-8'))
+
     for i in range(len(declist)):
         if (declist[i]["bloodtype"] == blood):
             templist.append(declist[i])
     No = len(templist)
     print("There are ",No,"people.")
-    #print("test------------------------------",type(templist))
+
     for i in range(len(templist)):
         print(templist[i]["name"] + ": " + templist[i]["bloodtype"])
     return templist
@@ -209,9 +156,7 @@ def findall_ageofpatients_below(real_age,section):
         dob = declist[i]["dob"]
         year = int(dob[6:])
         age = current_year - year
-        #print("current:",current_year)
-        #print("year",year)
-        #print("age:",age)
+
         if age <= int(real_age):
             print("Name: ",declist[i]["name"])
             print("Date of birth: ",declist[i]["dob"])
@@ -233,9 +178,7 @@ def find_room(roomNo,section):
         data = decdoc.decode('UTF-8')
         data = json.loads(data)
         declist.append(data)
-        #print(decdoc)
-        #print(type(decdoc))
-        #print(decdoc.decode('UTF-8'))
+
     for i in range(len(declist)):
         if (declist[i]["Room"] == str(roomNo)):
             print("ID: ", declist[i]["id"])
@@ -269,9 +212,7 @@ def findall_height(height,section):
         data = json.loads(data)
         declist.append(data)
         print("test--------------------------:",len(declist))
-        #print(decdoc)
-        #print(type(decdoc))
-        #print(decdoc.decode('UTF-8'))
+
     for i in range(len(declist)):
         if (declist[i]["nationality"] <= height):
             templist.append(declist[i])
@@ -294,16 +235,13 @@ def findall_weight(weight,section):
         data = decdoc.decode('UTF-8')
         data = json.loads(data)
         declist.append(data)
-        #print("test--------------------------:",len(declist))
-        #print(decdoc)
-        #print(type(decdoc))
-        #print(decdoc.decode('UTF-8'))
+
     for i in range(len(declist)):
         if (declist[i]["nationality"] <= weight):
             templist.append(declist[i])
     No = len(templist)
     print("There are ",No,"people.")
-    #print("test------------------------------",type(templist))
+
     for i in range(len(templist)):
         print(templist[i]["name"] + ": " + templist[i]["weight"] + 'kg')
     return templist
@@ -328,8 +266,6 @@ def getview(section):
     while(True):
         test = input("Which type of patient data you want to know? (information, nationality, bloodtype, age, room, back, exit): ")
         test.lower()
-        #print(section)
-        #print(type(section))
         if test not in ("information", "nationality", "bloodtype", "age", "room", "back","exit"):
             print("Invalid type of data")
         elif test == "exit":

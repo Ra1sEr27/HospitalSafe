@@ -26,7 +26,6 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
             mycol = mydb[accessdb]
         except(couchdb.http.Unauthorized,couchdb.http.ResourceNotFound):
             print("Database is not existed")
-        #print("---Type exit or back to go back to registrar---")
         username = input("Enter name: ")
         if username == "exit":
             exit()
@@ -47,9 +46,6 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
                 break
             else:
                 print("Passwords are not matched, please try again")
-        #id generator
-        #print(accessdb)
-        #generate last 4 digit of id
         
         if accessdb != "admin": #generate staff id
             staffcolnumlist = []
@@ -64,11 +60,11 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
             section_no = accessdb[7]
             section_no_int = int(section_no)
             if section_no_int in sorted_staffcolnumlist:
-                dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\Code\section{}-staff'.format(section_no)
+                directory = os.path.abspath('.') #get current directory of the folder
+                dir_path = os.path.join(directory, "section{}-staff".format(section_no)) #open this dir to count files
             else:
                 print("Invalid section")
-            
-            #staff_no =len([entry for entry in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, entry))]) + 1
+
             staff_id_first2digits = str(section_no)
             while(len(staff_id_first2digits) != 2):
                 staff_id_first2digits = "0" + staff_id_first2digits
@@ -79,7 +75,6 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
             dir_list_onlyID = []
             for i in range(len(dir_list)): #append all of the file names from the chosen folder
                 dir_list_onlyID.append(dir_list[i][:7])
-            #print(dir_list_onlyID)
             while(staff_id in dir_list_onlyID): #increase the number of last 4 digits
                 staff_id_last4digits = int(staff_id_last4digits)
                 staff_id_last4digits += 1
@@ -90,8 +85,8 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
                     #print("in loop ",staff_id_last4digits)
                 staff_id = role[0] +staff_id_first2digits + str(staff_id_last4digits)
         else: #generate admin id
-            dir_path = r'C:\Users\exia4\OneDrive\Desktop\SIIT\Third Year\Second Semester\Network Security\Project\Security-and-Cloud-Project\Project Code_original\Code\admin'
-            #staff_no =len([entry for entry in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, entry))]) + 1
+            directory = os.path.abspath('.') #get current directory of the folder
+            dir_path = os.path.join(directory, "admin") #open this dir to count files
             staff_id_last4digits = 0
             staff_id = "a000000"
             dir_list = os.listdir(dir_path)

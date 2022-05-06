@@ -11,8 +11,6 @@ import os
 import findDoc
 import symcrytjson
 def updateregistrar(key,wanteddoc):
-    # wanteddoc = findDoc.findDoc(key,decdoc["id"],"section{}_staff".format(decdoc["id"][2]))
-    # #print(wanteddoc)
     if type(wanteddoc) != NoneType: #Found the wanted document
         decdoc = symcrytjson.decryptjson(key,wanteddoc)
         

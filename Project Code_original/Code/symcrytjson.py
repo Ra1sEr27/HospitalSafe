@@ -26,16 +26,12 @@ def encryptjson(key,data_string,oldkey):
     
     # create MAC from key and data
     mac = hmac.new(key, data_byte, hashlib.sha256).digest()
-    #print("key: {}, id: {}".format(key,id_byte))
     hmac1 = hmac.new(key, id_byte, digestmod=hashlib.sha256)
     #Create MD from hmac1
     md1 = hmac1.hexdigest()
-
     mac = mac.decode('ISO-8859-1')
-
     # convert bytes to string
     encrypted = encrypted.decode("ISO-8859-1")
-    #encpname = encpname.decode("utf-8")
 
     # Upload ciphertext, MD and MAC to MongoDB
     doc = {'MD_id': '{}'.format(md1), 'CT': '{}'.format(
@@ -47,7 +43,6 @@ def encryptjson(key,data_string,oldkey):
 def decryptjson(key,doc):
     #start = timeit.default_timer()
     #store the stored ciphertext in CT
-    #print(doc)
     try:
         CT = doc['CT']
     except(TypeError):
@@ -66,12 +61,11 @@ def decryptjson(key,doc):
     while(key != check_key):
         i+=1
         with open('section{}-staff.key'.format(i),'rb') as file:
-            
             check_key = file.read()
     fernet = Fernet(check_key)
     try:
         decdoc = fernet.decrypt(CTbytes)
-    except(cryptography.fernet.InvalidToken or cryptography.exceptions.InvalidSignature): 
+    except(cryptography.fernet.InvalidToken or cryptography.exceptions.InvalidSignature): #cannot decrypt the ciphertext -> data has been modified
         print("The data has been modified")
         print("Detected from section: ",str(i))
         keyrevocation.keyrevocation(str(i))
