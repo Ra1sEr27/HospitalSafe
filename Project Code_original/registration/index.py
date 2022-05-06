@@ -1,3 +1,4 @@
+import json
 from types import NoneType
 from cryptography.fernet import Fernet
 import hmac, hashlib
@@ -10,7 +11,7 @@ import registrar
 import symcrytjson
 import timeit
 import getview
-import pymongo
+import pymongo,checkKVL, updatepassword
 def index():
     while(True):
         id = input("please insert id : ")
@@ -19,16 +20,9 @@ def index():
         password = getpass.getpass("please insert password : ")
         if password == "exit":
             exit()
-        if password != "": #password is not blank
-            start = timeit.default_timer()
-        
-        
-        ############## finding admin ##############
-        
-        with open('admin.key', 'rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key
+            
+        with open('admin.key', 'rb') as file: #open admin's key
             admin_key = file.read()
-        
-        
         wanteddoc = findDoc.findDoc(admin_key,id,"admin") #find document in admin database
         if type(wanteddoc) != NoneType: #user is admin
             decryptcheck = symcrytjson.decryptjson(admin_key, wanteddoc)
@@ -42,9 +36,19 @@ def index():
             password_check = decryptcheck["password"] #stored password
             sa = 'a' # admin
             if hashedpassword != password_check: #The inputted passsword is not matched with the stored password
-                print("Incorrect password. Please try again.")
+                revokestatus, key = checkKVL.checkKVL(id) #check revoke status
+                if revokestatus: #try to hash with the old key(if any)
+                    admin_key = str.encode(key) 
+                    hmac1 = hmac.new(admin_key, password_byte, digestmod=hashlib.sha256)
+                    #Create password MD from hmac1
+                    hashedpassword = hmac1.hexdigest() #hashed password from input
+                    if hashedpassword != password_check:
+                        print("Incorrect password. Please try again.")
+                    
+                elif not revokestatus:
+                    print("Incorrect password. Please try again.")
         
-        ############## finding a staff ##############
+        #find staff's document
         section_no=0
         client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
         mydb = client["Hospital"]
@@ -64,15 +68,13 @@ def index():
             if section_no > len(staffcolnumlist):
                 print("There is no {}'s document stored in the system".format(id))
                 sa = "none" # not found any staff / admin
-                
                 # worst case runtime 
-                stop = timeit.default_timer()
-                print('Time: ', stop - start)
-                
+                #stop = timeit.default_timer()
+                #print('Time: ', stop - start)
                 break
-            with open('section{}-staff.key'.format(section_no),'rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key
+            with open('section{}-staff.key'.format(section_no),'rb') as file:
                 key_selected = file.read()
-
+            
             wanteddoc = findDoc.findDoc(key_selected,id,"section{}-staff".format(section_no))
             sa = 's' # staff
             
@@ -82,6 +84,7 @@ def index():
                 print("Please re-login. Sorry for inconvenient")
                 index()
             id_check = decryptcheck["id"]
+            
             #hash the password
             password_byte = str.encode(password)
             hmac1 = hmac.new(key_selected, password_byte, digestmod=hashlib.sha256)
@@ -89,21 +92,34 @@ def index():
             hashedpassword = hmac1.hexdigest() #hashed password from input
             #print(hashedpassword)
             password_check = decryptcheck["password"]
-            #print(hashedpassword)
-            #print("key: ",key_selected)
-            #print(id_check+" "+password_check)
-            #print(id+" "+password)
             if hashedpassword != password_check: #The inputted passsword is not matched with the stored password
-                print("Incorrect password. Please try again.")
+                revokestatus, key = checkKVL.checkKVL(id) #check revoke status
+                if revokestatus: #use old key to hash the password
+                    key_selected = str.encode(key)
+                    hmac1 = hmac.new(key_selected, password_byte, digestmod=hashlib.sha256)
+                    #Create password MD from hmac1
+                    hashedpassword = hmac1.hexdigest() #hashed password from input
+                    if hashedpassword != password_check:
+                        print("Incorrect password. Please try again.")
+                elif not revokestatus: #never get revoked
+                    print("Incorrect password. Please try again.")
+                
 
         if(sa != "none" and id == id_check and hashedpassword == password_check): # authenticated
             if(sa == 's'):
+                with open('section{}-staff.key'.format(section_no),'rb') as file: 
+                    key_selected = file.read()
                 decdoc = symcrytjson.decryptjson(key_selected,wanteddoc)
-                known_sec = decdoc['accessdb'] # accessdb            
-            
-            #print(decryptcheck) # id, password, role
+                known_sec = decdoc['accessdb'] # accessdb
+            revokestatus, key = checkKVL.checkKVL(id)
+            if revokestatus: #update the password
+                hmac1 = hmac.new(key_selected, password_byte, digestmod=hashlib.sha256)
+                #Create password MD from hmac1
+                hashedpassword = hmac1.hexdigest() #hashed password
+                updatepassword.updatepassword(wanteddoc,decdoc,hashedpassword,key_selected)
+                
+
             role = decryptcheck['role']
-            
             if(role == "admin"):
                 #with open('admin.key','rb') as file:  #section1_staff.key , section2_staff.key, section3_staff.key . . . , section5_staff.key
                 #    admin_key = file.read()

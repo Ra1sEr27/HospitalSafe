@@ -1,3 +1,4 @@
+from asyncore import write
 import keygenerator
 import couchdb
 from cryptography.fernet import Fernet
@@ -12,26 +13,52 @@ import registrar
 def keyrevocation(target_section):
     client = pymongo.MongoClient("mongodb+srv://Nontawat:non@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
     mydb = client['Hospital']
-    with open('section{}-staff.key'.format(target_section),'rb') as file2:
-        old_key = file2.read() #keep the old key for generating MD
+    
     staffcolnumlist = []
     allcollist = mydb.list_collection_names()
     for i in range(len(allcollist)):
         if "staff" in allcollist[i]:
             staffcolnumlist.append(allcollist[i][7])
-    while(True):
-        if target_section == "0":   #target section = admin section
-            keygenerator.re_adminkeygenerator()
-            db = mydb["admin"]
-            break
-        elif target_section in staffcolnumlist:
-            keygenerator.re_staffkeygenerator(target_section)
-            staffcol = mydb["section{}-staff".format(target_section)]
-            patientcol = mydb["section{}-patient".format(target_section)]
-            break
-        else:
-            print("Invalid section, please try again")
-            break
+    
+    if target_section == "0":   #target section = admin section
+        with open('admin.key','r') as file:
+            old_key = file.read() #keep the old key for authentication MD
+        with open('KVL.json','r+') as json_file: #store the old key to KVL
+            kvl = json.load(json_file)
+        
+            if target_section not in kvl:
+                entry = {target_section: old_key}
+                kvl.update(entry)
+            else:
+                kvl[target_section] = old_key
+            print(kvl)
+            json_file.seek(0)
+            json.dump(kvl, json_file)
+        keygenerator.re_adminkeygenerator()
+        db = mydb["admin"]
+        
+    elif target_section in staffcolnumlist:
+        with open('section{}-staff.key'.format(target_section),'r') as file2:
+            old_key = file2.read() #keep the old key for generating MD
+
+        with open('KVL.json','r+') as json_file:#store the old key to KVL
+            kvl = json.load(json_file)
+        
+            if target_section not in kvl:
+                entry = {target_section: old_key}
+                kvl.update(entry)
+            else:
+                kvl[target_section] = old_key
+            print(kvl)
+            json_file.seek(0)
+            json.dump(kvl, json_file)
+        keygenerator.re_staffkeygenerator(target_section)
+        staffcol = mydb["section{}-staff".format(target_section)]
+        patientcol = mydb["section{}-patient".format(target_section)]
+        
+    else:
+        print("Invalid section, please try again")
+        exit()
     #for docid in staffcol.find(): #delete all documents in compromised staff section
     staffcol.delete_many({})
     #for docid in patientcol.view('_all_docs'): #delete all documents in compromised patient section
@@ -46,9 +73,6 @@ def keyrevocation(target_section):
         f = os.path.join(directory_patient, filename)
         # checking if it is a file
         if os.path.isfile(f):
-            
-            #print('patient sec :',target_section)
-            
             with open(f, 'rb') as file:
                 local_file = file.read()
                 data_string = local_file.decode('ISO-8859-1')

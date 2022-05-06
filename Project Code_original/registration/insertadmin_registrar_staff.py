@@ -120,7 +120,7 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
         doc = json.dumps(doc)
         #encrypt the document
         
-        doc_encrypted = encryptjson(key,doc,"")
+        doc_encrypted = encryptjson(key,doc)
         
         doc_encrypted_sorted = json.dumps(doc_encrypted, indent = 3)
         print("Encrypted document: \n", doc_encrypted_sorted)
@@ -146,7 +146,7 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
         else:
             print("Invalid command, please try again")
 
-def encryptjson(key,data_string,oldkey):
+def encryptjson(key,data_string):
     #start = timeit.default_timer()
     #print("Used key: ",key)
     #convert string to JSON
