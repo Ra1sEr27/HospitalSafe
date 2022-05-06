@@ -1,8 +1,7 @@
 from types import NoneType
 from cryptography.fernet import Fernet
-
 import json
-import hashlib
+import keyrevocation
 from pymongo import MongoClient
 import pymongo
 import findDoc
@@ -31,6 +30,7 @@ def deletestaff(key,staffdb,staffid):
             f.close()
             os.remove(f.name)
             print("{}'s document has been deleted".format(staffid))
+            keyrevocation.keyrevocation(decdoc["id"][2])
             break
         elif ans =='n':
             break

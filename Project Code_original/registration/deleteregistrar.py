@@ -4,11 +4,10 @@ import onetimepad
 import getpass
 import couchdb
 import json
-import hashlib
+import keyrevocation
 from pymongo import MongoClient
 import pymongo
 import findDoc
-
 import symcrytjson
 import os
 def deleteregistrar(key,wanteddoc):
@@ -31,6 +30,7 @@ def deleteregistrar(key,wanteddoc):
                 f.close()
                 os.remove(f.name)
                 print("{}'s document has been deleted".format(decdoc["name"]))
+                keyrevocation.keyrevocation(decdoc["id"][2])
                 break
             elif ans =='n':
                 break

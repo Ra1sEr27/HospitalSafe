@@ -1,6 +1,5 @@
 from asyncore import write
 import keygenerator
-import couchdb
 from cryptography.fernet import Fernet
 from pymongo import MongoClient
 import pymongo
@@ -63,10 +62,8 @@ def keyrevocation(target_section):
     staffcol.delete_many({})
     #for docid in patientcol.view('_all_docs'): #delete all documents in compromised patient section
     patientcol.delete_many({})
-
-    # rocovery from local and store it on cloud server. Open local folder according to leaked section
     
-    # patient recover and encrypt
+    # re-encryptf patient's document recover
     directory_patient = 'section{}-patient'.format(target_section)
 
     for filename in os.listdir(directory_patient): #encrypt local patient's documents and upload to MongoDB
@@ -81,14 +78,10 @@ def keyrevocation(target_section):
             with open('section{}-staff.key'.format(target_section),'rb') as file2:
                 new_key = file2.read()
             
-            #doc_string = json.dumps(data)
-            #doc_sorted = json.dumps(local_file, indent = 3)
-            
             print("Patient's data: ",data_string)
             #print("Used key: ",new_key)
             doc_encrypted = symcrytjson.encryptjson(new_key,data_string,"") 
-            #doc_encrypted_sorted = json.dumps(doc_encrypted, indent = 3)
-            print("Re-encrypted the patient's documents")
+            print("Finished re-encryption of patient's documents")
             patientcol = mydb["section{}-patient".format(target_section)]
             patientcol.insert_one(doc_encrypted)
             
@@ -100,9 +93,6 @@ def keyrevocation(target_section):
         fs = os.path.join(directory_staff, filename)
         # checking if it is a file
         if os.path.isfile(fs):
-            #print(f)
-            
-            #print('staff sec :',target_section)
             
             with open(fs,'rb') as file:
                 local_file = file.read()
@@ -114,7 +104,7 @@ def keyrevocation(target_section):
             print("staff's data: ",data_string)
             print("Used key: ",new_key)
             doc_encrypted = symcrytjson.encryptjson(new_key,data_string,"") 
-            print("Re-encrypted the staff's documents")
+            print("Finished re-encryption of staff's documents")
             
             staffcol = mydb["section{}-staff".format(target_section)]
             staffcol.insert_one(doc_encrypted)
