@@ -1,4 +1,3 @@
-from types import NoneType
 from cryptography.fernet import Fernet
 import getpass
 from pymongo import MongoClient
@@ -8,6 +7,8 @@ import hashlib
 import hmac
 import os
 import symcrytjson
+
+NoneType = type(None)
 def updateregistrar(key,wanteddoc):
     if type(wanteddoc) != NoneType: #Found the wanted document
         decdoc = symcrytjson.decryptjson(key,wanteddoc)

@@ -1,12 +1,8 @@
 from cryptography.fernet import Fernet
-import onetimepad
-import getpass
 from pymongo import MongoClient
 import pymongo
 import hashlib
 import hmac
-import binascii
-
 
 def findDoc(key,id,db):
     

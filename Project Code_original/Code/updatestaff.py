@@ -1,5 +1,3 @@
-
-from types import NoneType
 from cryptography.fernet import Fernet
 import getpass
 import json
@@ -11,8 +9,8 @@ import symcrytjson
 import hmac, hashlib
 import getpass
 
+NoneType = type(None)
 def updatestaff(key,staffdb,staffid):
-
         wanteddoc = findDoc.findDoc(key,staffid,staffdb)
         if type(wanteddoc) == NoneType: #if function findDoc found the document then break the while loop
             print("The document is not existed")

@@ -8,7 +8,6 @@ import registrar
 from pymongo import MongoClient
 import pymongo
 def insertpatient(key,patientdb):
-    
     try:
         # connect to MongoDB
         client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")

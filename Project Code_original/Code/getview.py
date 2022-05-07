@@ -5,7 +5,6 @@ from datetime import date
 from pymongo import MongoClient
 import pymongo
 
-import getpass
 client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
 db = client["Hospital"]   
 mycol = db["CTonly"]

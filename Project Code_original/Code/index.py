@@ -1,5 +1,3 @@
-
-import types
 from cryptography.fernet import Fernet
 import hmac, hashlib
 import getpass
@@ -11,7 +9,7 @@ import symcrytjson
 import getview
 import pymongo,checkKVL, updatepassword
 
-global NoneType
+
 NoneType = type(None)
 def index():
     while(True):

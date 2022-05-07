@@ -1,4 +1,4 @@
-from types import NoneType
+import types
 from cryptography.fernet import Fernet
 import json
 import keyrevocation
@@ -6,6 +6,8 @@ from pymongo import MongoClient
 import pymongo
 import symcrytjson
 import os
+
+NoneType = type(None)
 def deleteregistrar(key,wanteddoc):
     #find the document
     if type(wanteddoc) != NoneType:

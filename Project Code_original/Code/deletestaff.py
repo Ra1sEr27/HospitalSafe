@@ -1,4 +1,3 @@
-from types import NoneType
 from cryptography.fernet import Fernet
 import json
 import keyrevocation
@@ -7,6 +6,8 @@ import pymongo
 import findDoc
 import symcrytjson
 import os
+
+NoneType = type(None)
 def deletestaff(key,staffdb,staffid):
     wanteddoc = findDoc.findDoc(key,staffid,staffdb)
     if type(wanteddoc) == NoneType: #the document is existed

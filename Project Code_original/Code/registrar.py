@@ -1,4 +1,3 @@
-from types import NoneType
 from cryptography.fernet import Fernet
 import insertpatient
 import updatepatient
@@ -7,10 +6,11 @@ import insertadmin_registrar_staff
 import deletestaff
 import updatestaff
 import getalldoc
+
+NoneType = type(None)
 def registrar(key,section_no):
     patientdb = "section{}-patient".format(section_no)
     staffdb = "section{}-staff".format(section_no)
-
     while(True):
         type = input("Which types of document do you want to view/insert/modify? (medical staff,patient,exit): ")
         if type == "patient":

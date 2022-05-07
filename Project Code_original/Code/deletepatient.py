@@ -1,4 +1,4 @@
-from types import NoneType
+import types
 from cryptography.fernet import Fernet
 import json
 from pymongo import MongoClient
@@ -6,7 +6,7 @@ import pymongo
 import findDoc
 import symcrytjson
 import os
-
+NoneType = type(None)
 def deletepatient(key,patientdb):
         while(True):
             pid = input("Enter patient id: ")

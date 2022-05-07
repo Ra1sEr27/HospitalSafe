@@ -1,5 +1,4 @@
 
-from types import NoneType
 from cryptography.fernet import Fernet
 import getpass
 from pymongo import MongoClient
@@ -12,7 +11,7 @@ import findDoc
 import symcrytjson
 import getpass
 
-
+NoneType = type(None)
 def updateadmin(key,adminid):
     client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
     db = client["Hospital"]   
