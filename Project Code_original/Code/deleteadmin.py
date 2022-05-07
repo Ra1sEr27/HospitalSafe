@@ -1,10 +1,5 @@
 from cryptography.fernet import Fernet
-import onetimepad
-import getpass
-import couchdb
 import json
-import hashlib
-import hmac
 import os
 import findDoc
 import symcrytjson

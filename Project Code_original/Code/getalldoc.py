@@ -1,6 +1,4 @@
 from cryptography.fernet import Fernet
-import onetimepad
-import getpass
 import hmac, hashlib
 import json
 import hashlib

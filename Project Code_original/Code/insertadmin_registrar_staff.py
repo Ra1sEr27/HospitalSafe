@@ -3,19 +3,12 @@ from struct import pack
 from cryptography.fernet import Fernet
 import os
 import getpass
-import couchdb
 from pymongo import MongoClient
 import pymongo
 import json
 import hashlib
 import hmac
-import timeit
-import binascii
-import ast
-import symcrytjson
 import getpass
-import registrar
-import admin
 
 def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
     while(True):
@@ -24,7 +17,7 @@ def insertadmin_registrar_staff(key,accessdb,inserterrole,role):
             client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
             mydb = client["Hospital"]
             mycol = mydb[accessdb]
-        except(couchdb.http.Unauthorized,couchdb.http.ResourceNotFound):
+        except(pymongo.errors.ServerSelectionTimeoutError):
             print("Database is not existed")
         username = input("Enter name: ")
         if username == "exit":

@@ -1,13 +1,9 @@
 
 from cryptography.fernet import Fernet
 import cryptography
-import onetimepad
-import getpass
-import timeit
 import json
 import hashlib
 import hmac
-import binascii
 import keyrevocation
 def encryptjson(key,data_string,oldkey):
     #start = timeit.default_timer()

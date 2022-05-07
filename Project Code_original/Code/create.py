@@ -1,6 +1,5 @@
 from cryptography.fernet import Fernet
 import os
-import couchdb
 from pymongo import MongoClient
 import pymongo
 

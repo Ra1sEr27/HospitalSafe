@@ -1,7 +1,6 @@
 
 from types import NoneType
 from cryptography.fernet import Fernet
-import onetimepad
 import getpass
 import json
 from pymongo import MongoClient

@@ -1,7 +1,6 @@
 
 from types import NoneType
 from cryptography.fernet import Fernet
-import onetimepad
 import getpass
 from pymongo import MongoClient
 import pymongo
@@ -11,7 +10,6 @@ import hmac
 import os
 import findDoc
 import symcrytjson
-import registrar
 import getpass
 
 

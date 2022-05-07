@@ -3,11 +3,9 @@ import keygenerator
 from cryptography.fernet import Fernet
 from pymongo import MongoClient
 import pymongo
-import couchdb
 import json
 import os
 import symcrytjson
-import registrar
 
 def keyrevocation(target_section):
     client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")

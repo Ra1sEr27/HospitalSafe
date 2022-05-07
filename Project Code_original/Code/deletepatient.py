@@ -1,10 +1,6 @@
 from types import NoneType
 from cryptography.fernet import Fernet
-import onetimepad
-import getpass
-import couchdb
 import json
-import hashlib
 from pymongo import MongoClient
 import pymongo
 import findDoc
@@ -51,5 +47,5 @@ def deletepatient(key,patientdb):
                     else:
                         print("Invalid input, please try again")
             else:
-                ("Invalid patient's ID")
+                print("Invalid patient's ID")
 

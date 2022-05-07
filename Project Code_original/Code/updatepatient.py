@@ -1,11 +1,8 @@
 
 from cryptography.fernet import Fernet
-import onetimepad
 from pymongo import MongoClient
 import pymongo
 import json
-import hashlib
-import hmac
 import os
 import findDoc
 import symcrytjson

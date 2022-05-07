@@ -1,16 +1,12 @@
 
 from multiprocessing.sharedctypes import Value
 from cryptography.fernet import Fernet
-import onetimepad
-import getpass
-import couchdb
 import json
 import os
 import symcrytjson
 import registrar
 from pymongo import MongoClient
 import pymongo
-import timeit
 def insertpatient(key,patientdb):
     
     try:
@@ -18,7 +14,7 @@ def insertpatient(key,patientdb):
         client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")
         mydb = client['Hospital']
         mycol = mydb[patientdb]
-    except(couchdb.http.Unauthorized):
+    except(pymongo.errors.ServerSelectionTimeoutError):
         print("Invalid username or password")
     if entername() == "back":
         registrar.registrar(key,patientdb[7])

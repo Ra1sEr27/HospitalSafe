@@ -1,6 +1,5 @@
 from types import NoneType
 from cryptography.fernet import Fernet
-
 import insertpatient
 import updatepatient
 import deletepatient
@@ -8,7 +7,6 @@ import insertadmin_registrar_staff
 import deletestaff
 import updatestaff
 import getalldoc
-import findDoc
 def registrar(key,section_no):
     patientdb = "section{}-patient".format(section_no)
     staffdb = "section{}-staff".format(section_no)

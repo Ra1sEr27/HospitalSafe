@@ -1,6 +1,5 @@
 from types import NoneType
 from cryptography.fernet import Fernet
-import onetimepad
 import getpass
 from pymongo import MongoClient
 import pymongo
@@ -8,7 +7,6 @@ import json
 import hashlib
 import hmac
 import os
-import findDoc
 import symcrytjson
 def updateregistrar(key,wanteddoc):
     if type(wanteddoc) != NoneType: #Found the wanted document

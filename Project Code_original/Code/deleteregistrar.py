@@ -1,13 +1,9 @@
 from types import NoneType
 from cryptography.fernet import Fernet
-import onetimepad
-import getpass
-import couchdb
 import json
 import keyrevocation
 from pymongo import MongoClient
 import pymongo
-import findDoc
 import symcrytjson
 import os
 def deleteregistrar(key,wanteddoc):

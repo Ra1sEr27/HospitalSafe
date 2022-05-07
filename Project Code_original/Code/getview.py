@@ -1,14 +1,9 @@
-#this imports the cryptography package
+
 from cryptography.fernet import Fernet
 import json
-#binasc
-import sys
 from datetime import date
-#from cloudant import couchdb_admin_party
-#from cloudant.result import Result
 from pymongo import MongoClient
 import pymongo
-import timeit
 
 import getpass
 client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1?retryWrites=true&w=majority")

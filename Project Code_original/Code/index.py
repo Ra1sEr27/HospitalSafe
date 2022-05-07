@@ -1,15 +1,13 @@
-import json
+
 from types import NoneType
 from cryptography.fernet import Fernet
 import hmac, hashlib
 import getpass
 import findDoc
 import symcrytjson
-import getpass
 import admin
 import registrar
 import symcrytjson
-import timeit
 import getview
 import pymongo,checkKVL, updatepassword
 def index():
