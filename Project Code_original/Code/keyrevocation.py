@@ -5,9 +5,10 @@ from pymongo import MongoClient
 import pymongo
 import json
 import os
-import symcrytjson
+import symcrytjson, timeit
 
 def keyrevocation(target_section):
+    #start = timeit.default_timer()
     client = pymongo.MongoClient("mongodb+srv://Nontawat:iS1sKbQnyLO6CWDE@section1.oexkw.mongodb.net/section1-patient?retryWrites=true&w=majority")
     mydb = client['Hospital']
     
@@ -28,7 +29,7 @@ def keyrevocation(target_section):
                 kvl.update(entry)
             else:
                 kvl[target_section] = old_key
-            print(kvl)
+            #print(kvl)
             json_file.seek(0)
             json.dump(kvl, json_file)
         keygenerator.re_adminkeygenerator()
@@ -46,7 +47,7 @@ def keyrevocation(target_section):
                 kvl.update(entry)
             else:
                 kvl[target_section] = old_key
-            print(kvl)
+            #print(kvl)
             json_file.seek(0)
             json.dump(kvl, json_file)
         keygenerator.re_staffkeygenerator(target_section)
@@ -99,10 +100,12 @@ def keyrevocation(target_section):
             with open('section{}-staff.key'.format(target_section),'rb') as file:
                 new_key = file.read()
 
-            print("staff's data: ",data_string)
-            print("Used key: ",new_key)
+            #print("staff's data: ",data_string)
+            #print("Used key: ",new_key)
             doc_encrypted = symcrytjson.encryptjson(new_key,data_string,"") 
             print("Finished re-encryption of staff's documents")
             
             staffcol = mydb["section{}-staff".format(target_section)]
             staffcol.insert_one(doc_encrypted)
+    #stop = timeit.default_timer()
+    #print('Time: ', stop - start)

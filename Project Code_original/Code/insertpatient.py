@@ -31,7 +31,7 @@ def insertpatient(key,patientdb):
     dir_list_onlyID = []
     for i in range(len(dir_list)): #append all of the file names from the chosen folder
         dir_list_onlyID.append(dir_list[i][:7])
-    print(dir_list_onlyID)
+    #print(dir_list_onlyID)
     while(patient_id in dir_list_onlyID): #increase the number of last 4 digits
         patient_id_last4digits = int(patient_id_last4digits)
         patient_id_last4digits += 1
@@ -39,7 +39,7 @@ def insertpatient(key,patientdb):
         
         while(len(patient_id_last4digits) != 4): #pad 0 to the left of last 4 digits
             patient_id_last4digits = "0" + patient_id_last4digits
-            print("in loop ",patient_id_last4digits)
+            #print("in loop ",patient_id_last4digits)
         patient_id = "p" + patient_id_first2digits + str(patient_id_last4digits)
     
     doc = {"id":"{}".format(patient_id),
