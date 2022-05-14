@@ -76,9 +76,7 @@ def keyrevocation(target_section):
             
             with open('section{}-staff.key'.format(target_section),'rb') as file2:
                 new_key = file2.read()
-            
-            print("Patient's data: ",data_string)
-            #print("Used key: ",new_key)
+
             doc_encrypted = symcrytjson.encryptjson(new_key,data_string,"") 
             print("Finished re-encryption of patient's documents")
             patientcol = mydb["section{}-patient".format(target_section)]

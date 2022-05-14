@@ -23,12 +23,15 @@ def updatepatient(key,patientdb):
             if pid == "exit":
                 exit()
             elif pid == "back":
-                registrar.registrar(key,patientdb[7])
+                #registrar.registrar(key,patientdb[7])
+                break
             wanteddoc = findDoc.findDoc(key,pid,patientdb)
             if wanteddoc != "": #if function findDoc found the document then break the while loop
                 break
             else:
                 print("The wanted document is not found, please try again")
+        if pid == "back":
+            break
         decdoc = symcrytjson.decryptjson(key,wanteddoc)
         decdoc_sorted = json.dumps(decdoc, indent = 6)
         print("{}'s document: \n{}".format(pid,decdoc_sorted))
@@ -95,3 +98,4 @@ def updatepatient(key,patientdb):
                 exit()
             else:
                 print("Invalid attribute, please try again")
+        
