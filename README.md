@@ -16,6 +16,7 @@ Manual for setting up our program.
     - pip install hmac
     - pip install hashlib
     - pip install pymongo
+8) Type in the following command in the terminal "python index.py".
 
 Manual for logging in to the system.
 1) Use ID of the user (Can be known by looking at the local file name) as ID.
