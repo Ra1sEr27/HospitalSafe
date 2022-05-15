@@ -2,7 +2,7 @@
   An application for allowing a hospital's staff to manage the patient's document safely, to able to access anywhere in the private network. 
   With a security and cloud features provided.
   
-Manual for setting up our program
+Manual for setting up our program.
 1) Open https://account.mongodb.com/account/login?n=%2Fv2%2F62655d42f88180009011aa95%23security%2Fnetwork%2FaccessList and login with this email and password.
     Email: 6222770735@g.siit.tu.ac.th
     Password: OOzyISp1Fh9lIbOp
@@ -16,3 +16,7 @@ Manual for setting up our program
     - pip install hmac
     - pip install hashlib
     - pip install pymongo
+
+Manual for logging in to the system.
+1) Use ID of the user (Can be known by looking at the local file name) as ID.
+2) Use firstname(lowercase) of the user and follow with "123" as a password.
