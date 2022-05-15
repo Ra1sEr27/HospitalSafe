@@ -49,6 +49,10 @@ def updateadmin(key,adminid):
                                     exit()
                                 elif confirm == new_val:
                                     print("password matched")
+                                    password_byte = str.encode(new_val)
+                                    hmac1 = hmac.new(key, password_byte, digestmod=hashlib.sha256)
+                                    #Create password MD from hmac1
+                                    new_val = hmac1.hexdigest()
                                     grantedpasswdchange = True
                                     break
                                 else:

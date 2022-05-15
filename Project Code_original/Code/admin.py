@@ -36,7 +36,6 @@ def admin(key,adminid):
                         command1 = input("Which tasks do you want to do? (view,insert,modify,back): ")
                         if command1 == "insert":
                             insertadmin_registrar_staff.insertadmin_registrar_staff(key,"admin","admin","admin")
-                        #elif command1 == "view":
                         elif command1 == "view":
                             getalldoc.getalldoc(key,"admin")
                         elif command1 == "modify":
@@ -44,7 +43,9 @@ def admin(key,adminid):
                             if command =="update":
                                 updateadmin.updateadmin(key,adminid)
                             elif command =="delete":
-                                deleteadmin.deleteadmin(key,adminid)
+                                delconfirm = deleteadmin.deleteadmin(key,adminid)
+                                if delconfirm:
+                                    return 0
                             elif command =="back": # exit the if-statement
                                 break
                             else:
@@ -110,7 +111,6 @@ def admin(key,adminid):
                             elif command1 == "modify":
                                 command = input("What do you want to do with this document? (update,delete,back): ")
                                 if command =="update":
-                                    print("rid:",rid)
                                     updateregistrar.updateregistrar(key,wanteddoc)
                                 elif command =="delete":
                                     deleteregistrar.deleteregistrar(key,wanteddoc)

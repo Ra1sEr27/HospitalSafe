@@ -79,6 +79,7 @@ def updateregistrar(key,wanteddoc):
                     #print the results
                     edited_doc_lite = {"name": "{}".format(decdoc["name"]), "password": "{}".format(decdoc["password"]), "role": "{}".format(decdoc["role"]), "accessdb": "{}".format(decdoc["accessdb"])}
                     edited_doc_lite_sorted = json.dumps(edited_doc_lite, indent = 3)
+                    
                     print("Edited {}'s document: \n{}".format(decdoc["id"],edited_doc_lite_sorted))
                     print("Encrypted edited {}'s document: \n{}".format(decdoc["id"],encrypted_edited_decdoc_sorted))
 

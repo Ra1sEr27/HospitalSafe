@@ -63,13 +63,9 @@ def index():
         
         while type(wanteddoc) == NoneType: #find staff's document in every staff database when the user is not an admin
             section_no += 1
-            #print(section_no)
-            if section_no > len(staffcolnumlist):
+            if section_no == len(staffcolnumlist):
                 print("There is no {}'s document stored in the system".format(id))
                 sa = "none" # not found any staff / admin
-                # worst case runtime 
-                #stop = timeit.default_timer()
-                #print('Time: ', stop - start)
                 break
             with open('section{}-staff.key'.format(section_no),'rb') as file:
                 key_selected = file.read()
@@ -105,8 +101,13 @@ def index():
                 
 
         if(sa != "none" and id == id_check and hashedpassword == password_check): # authenticated
-            if(sa == 's'):
+            if(sa == 's'): #user is staff
                 with open('section{}-staff.key'.format(section_no),'rb') as file: 
+                    key_selected = file.read()
+                decdoc = symcrytjson.decryptjson(key_selected,wanteddoc)
+                known_sec = decdoc['accessdb'] # accessdb
+            if(sa == 'a'): #user is admin
+                with open('admin.key','rb') as file: 
                     key_selected = file.read()
                 decdoc = symcrytjson.decryptjson(key_selected,wanteddoc)
                 known_sec = decdoc['accessdb'] # accessdb
@@ -117,7 +118,6 @@ def index():
                 hashedpassword = hmac1.hexdigest() #hashed password
                 updatepassword.updatepassword(wanteddoc,decdoc,hashedpassword,key_selected)
                 
-
             role = decryptcheck['role']
             if(role == "admin"):
                 print("---Welcome to admin section---")

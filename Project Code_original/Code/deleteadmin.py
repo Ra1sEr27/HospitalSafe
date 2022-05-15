@@ -4,7 +4,7 @@ import os
 import findDoc
 import symcrytjson
 from pymongo import MongoClient
-import pymongo
+import pymongo, keyrevocation
 
 def deleteadmin(key,adminid):
     wanteddoc = findDoc.findDoc(key,adminid,"admin")
@@ -25,7 +25,8 @@ def deleteadmin(key,adminid):
                 f.close()
                 os.remove(f.name)
                 print("{}'s document has been deleted".format(adminid))
-                break
+                keyrevocation.keyrevocation("0")
+                return True
             elif ans =='n':
                 break
             elif ans == "exit":

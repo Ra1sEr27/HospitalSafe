@@ -22,7 +22,7 @@ def getalldoc(key,db):
         #Create MD from hmac1
         md1 = hmac1.hexdigest()
         decdoc_sorted = json.dumps(decdoc,indent = 6)
-        print("MD: ",md1)
+        #print("MD: ",md1)
         #if(decdoc_sorted['password'] != ''):
         #    decdoc['password'] = ''
         print("{}'s document: \n{}".format(decdoc["name"],decdoc_sorted))
