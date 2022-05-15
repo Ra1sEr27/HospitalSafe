@@ -18,5 +18,5 @@ Manual for setting up our program.
     - pip install pymongo
 
 Manual for logging in to the system.
-1) Use ID of the user (Can be known by looking at the local file name).
-2) Use firstname of the user follow with 123 as a password.
+1) Use ID of the user (Can be known by looking at the local file name) as ID.
+2) Use firstname(lowercase) of the user and follow with "123" as a password.
