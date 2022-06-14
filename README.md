@@ -11,7 +11,9 @@
     - Plaintext (On-Premise)
     ![image](https://user-images.githubusercontent.com/94690219/173511853-7f2c5aa0-54c3-486e-93a7-4ea6f5797d76.png)
     - Ciphertext (On-Cloud)
-      ![image](https://user-images.githubusercontent.com/94690219/173513367-a3a85f8c-0b61-436c-a2c4-349c7c5a3f0d.png)
+    ![image](https://user-images.githubusercontent.com/94690219/173513367-a3a85f8c-0b61-436c-a2c4-349c7c5a3f0d.png)
+   
+      
 
   For the IEEE report of our project, click [here](https://docs.google.com/document/d/1MAH50E3cNIuhP8d7eeDTgi6Miu0p6SpwnStbSjQDf6w/edit?usp=sharing).
   
