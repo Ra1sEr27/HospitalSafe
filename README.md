@@ -8,10 +8,9 @@
     - MAC (Message Authentication Code) for integrity checking of patient document.
     - Use of MongoDB as a cloud storage for storing encrypted patient documents.
   - Data Structure of the patient document (On-Premise & On-Cloud)
-    -Plaintext (On-Premise)
+    - Plaintext (On-Premise)
     ![image](https://user-images.githubusercontent.com/94690219/173511853-7f2c5aa0-54c3-486e-93a7-4ea6f5797d76.png)
-    -Ciphertext (On-Cloud)
-    
+    - Ciphertext (On-Cloud)
     ![image](https://user-images.githubusercontent.com/94690219/173512604-41ce6906-9652-4869-a04c-4a3e5890135a.png)
 
   For the IEEE report of our project, click [here](https://docs.google.com/document/d/1MAH50E3cNIuhP8d7eeDTgi6Miu0p6SpwnStbSjQDf6w/edit?usp=sharing).
