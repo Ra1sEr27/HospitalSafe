@@ -1,6 +1,7 @@
 # HospitalSafe
-  An application for allowing a hospital's staff to manage the patient's document safely, to able to access anywhere in the private network. 
+  An application for allowing a hospital staff to manage the patient's document safely, to able to access anywhere in the private network. 
   With a security and cloud features provided.
+  For the detail of our project, click [here](https://docs.google.com/document/d/1MAH50E3cNIuhP8d7eeDTgi6Miu0p6SpwnStbSjQDf6w/edit?usp=sharing)
   
 Manual for setting up our program.
 1) Open https://account.mongodb.com/account/login?n=%2Fv2%2F62655d42f88180009011aa95%23security%2Fnetwork%2FaccessList and login with this email and password.
