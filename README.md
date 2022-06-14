@@ -20,12 +20,12 @@ Manual for setting up our program.
 1) Open [MongoDB](https://account.mongodb.com/account/login?n=%2Fv2%2F62655d42f88180009011aa95%23security%2Fnetwork%2FaccessList) and login with this email and password.
     Email: 6222770735@g.siit.tu.ac.th
     Password: OOzyISp1Fh9lIbOp
-2) Get your IP address by click [here](https://www.whatismyip.com/).
+2) Get your IP address by clicking [here](https://www.whatismyip.com/).
 3) Go to cluster name "section1" and click on "Netwok Access" at the left tab.
 4) Click at "Add IP Address" green button which located at the top right corner of the page.
 5) Enter the IP Address from step 3 and your address name.
 6) Click "Confirm" button.
-7) Type the following commands in your terminal
+7) Type the following commands in your terminal to install the required librarys
     - pip install cryptography
     - pip install hmac
     - pip install hashlib
