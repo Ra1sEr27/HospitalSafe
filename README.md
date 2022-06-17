@@ -7,7 +7,21 @@
     - SHA-256 (Hashing Algorithm) for message digest generation (use for indexing the encrypted patient documents on cloud)
     - MAC (Message Authentication Code) for integrity checking of patient document.
     - Use of MongoDB as a cloud storage for storing encrypted patient documents.
-  - Data Structure of the patient document (On-Premise & On-Cloud)
+  - System Diagram
+    - Encryption
+    
+      ![image](https://user-images.githubusercontent.com/94690219/174238196-d6b9b76c-659b-4a87-8920-ff6cf6825d95.png)
+    - Decryption
+    
+      ![image](https://user-images.githubusercontent.com/94690219/174238284-2d0aa6d5-83a4-4807-9291-b3f27a5d491a.png)
+    - Key Revocation
+    
+      ![image](https://user-images.githubusercontent.com/94690219/174238511-bc962edc-0d46-4515-94f2-ba5fd24806e0.png)
+    - Ciphertext Regeneration
+    
+      ![image](https://user-images.githubusercontent.com/94690219/174238582-eb7ac28c-a980-476c-9c4e-a614a4598bda.png)
+
+  - Data Structure of patient document (On-Premise & On-Cloud)
     - Plaintext (On-Premise)
     ![image](https://user-images.githubusercontent.com/94690219/173511853-7f2c5aa0-54c3-486e-93a7-4ea6f5797d76.png)
     - Ciphertext (On-Cloud)
