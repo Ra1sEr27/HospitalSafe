@@ -23,6 +23,7 @@
 
   - Data Structure of patient document (On-Premise & On-Cloud)
     - Plaintext (On-Premise)
+    
     ![image](https://user-images.githubusercontent.com/94690219/173511853-7f2c5aa0-54c3-486e-93a7-4ea6f5797d76.png)
     - Ciphertext (On-Cloud)
     
