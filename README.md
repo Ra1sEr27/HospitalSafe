@@ -5,7 +5,7 @@
     - RBAC (Role-based Access Control) for control the access of users (Admin, Registrar, and Medical Staff)
     - AES (Advanced Encryption System) for patient document encryption.
     - SHA-256 (Hashing Algorithm) for message digest generation (use for indexing the encrypted patient documents on cloud)
-    - MAC (Message Authentication Code) for integrity checking of patient document.
+    - HMAC (Hash-based Message Authentication Code) for integrity checking of patient document.
     - Use of MongoDB as a cloud storage for storing encrypted patient documents.
   - System Diagram
     - Encryption
